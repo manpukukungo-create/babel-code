@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BABEL CODE - 英語ローグライクカードバトル</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Toast notification area -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Global App Container -->
+  <div id="app">
+    
+    <!-- Global HUD Header (Hidden on Title & Character Selection) -->
+    <header id="global-header" class="game-header" style="display: none;">
+      <div class="hud-group">
+        <div class="hud-item" title="プレイヤーのHP">
+          <span>❤️</span>
+          <div class="hud-hp-bar">
+            <div id="hud-hp-fill" class="hud-hp-fill" style="width: 100%;"></div>
+          </div>
+          <span id="hud-hp-val" class="hud-value">30/30</span>
+        </div>
+        <div class="hud-item" title="所持ゴールド">
+          <span>🪙</span>
+          <span id="hud-gold-val" class="hud-value">99</span>
+        </div>
+        <div class="hud-item" title="現在のバベルの階層">
+          <span>🗼</span>
+          <span id="hud-floor-val" class="hud-value">F0</span>
+        </div>
+      </div>
+      <div class="hud-group" style="gap: 15px;">
+        <!-- Owned Relics Container -->
+        <div id="hud-relics-list" style="display: flex; gap: 8px;"></div>
+        <!-- Potion Slots Container -->
+        <div class="hud-potion-container" id="hud-potion-slots" style="display: flex; gap: 6px; align-items: center; margin-right: 10px;">
+          <button id="potion-slot-0" class="potion-btn empty" onclick="usePotion(0)">🧪 空</button>
+          <button id="potion-slot-1" class="potion-btn empty" onclick="usePotion(1)">🧪 空</button>
+        </div>
+        <!-- Dictionary button -->
+        <button class="action-btn secondary" style="padding: 6px 14px; font-size: 0.9rem; margin-right: 8px;" onclick="openDictViewer()">📖 文法辞典</button>
+        <!-- Deck button -->
+        <button class="action-btn secondary" style="padding: 6px 14px; font-size: 0.9rem;" onclick="openDeckViewer(false)">🎴 デッキを見る</button>
+      </div>
+    </header>
+
+    <!-- 1. TITLE SCREEN -->
+    <main id="title-screen" class="screen active">
+      <div class="screen-title">
+        <div class="game-logo">
+          <h1>BABEL CODE</h1>
+          <p>英語脳育成 × ローグライクカードバトル</p>
+        </div>
+        <button id="title-btn-start" class="action-btn" style="padding: 15px 40px; font-size: 1.3rem; letter-spacing: 2px;">バベルの塔へ入る</button>
+      </div>
+    </main>
+
+    <!-- 2. CHARACTER SELECT SCREEN -->
+    <main id="char-select-screen" class="screen">
+      <div class="screen-title" style="gap: 30px;">
+        <h2 style="font-family: var(--font-mono); font-size: 2.2rem; letter-spacing: 2px;">キャラクターを選択せよ</h2>
+        <div class="char-select-container">
+          <!-- Class 1 -->
+          <div class="char-card primary" onclick="selectCharacter('captain')">
+            <span class="char-avatar-large">🤠</span>
+            <div class="char-name">直感の切り込み隊長</div>
+            <div class="char-desc">「英語はパッションだ！」文法は後回し、とにかくノリとフィーリングで攻撃を畳み掛ける初心者向けアタッカー。</div>
+            <div class="char-stats">
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期HP:</span>
+                <span class="hud-value">35</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期レリック:</span>
+                <span class="hud-value">🖍️ 蛍光マーカー (正解Bパーツが光る)</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">デッキ傾向:</span>
+                <span class="hud-value" style="color: var(--color-red);">Type 1 (原形系) 特化</span>
+              </div>
+            </div>
+          </div>
+          <!-- Class 2 -->
+          <div class="char-card secondary" onclick="selectCharacter('wizard')">
+            <span class="char-avatar-large">🧙‍♂️</span>
+            <div class="char-name">論理の氷結マジシャン</div>
+            <div class="char-desc">「文法こそが最大の武器だ。」緻密に英文を構築し、手札ドローと墓地回収コンボで敵を完封する知性派学者。</div>
+            <div class="char-stats">
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期HP:</span>
+                <span class="hud-value">25</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期レリック:</span>
+                <span class="hud-value">✒️ 万年筆 (3枚ドローでエナジー+1)</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">デッキ傾向:</span>
+                <span class="hud-value" style="color: var(--color-purple);">Type 3 / 4 (過去分詞/文) 特化</span>
+              </div>
+            </div>
+          </div>
+          <!-- Class 3 -->
+          <div class="char-card wild" onclick="selectCharacter('explorer')">
+            <span class="char-avatar-large">🦁</span>
+            <div class="char-name">感覚の野生児</div>
+            <div class="char-desc">「今を楽しむ、それが私のやり方！」躍動感あふれる現在分詞を操り、持続ダメージ（毒・炎上）で獲物をじわじわと追い詰めるサバイバー。</div>
+            <div class="char-stats">
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期HP:</span>
+                <span class="hud-value">30</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期レリック:</span>
+                <span class="hud-value">☕ 冷めたコーヒー (デバフ付与時防+3)</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">デッキ傾向:</span>
+                <span class="hud-value" style="color: var(--color-green);">Type 2 (ing形) 特化</span>
+              </div>
+            </div>
+          </div>
+          <!-- Class 4 -->
+          <div class="char-card scholar" onclick="selectCharacter('scholar')">
+            <span class="char-avatar-large">🧐</span>
+            <div class="char-name">探求の古代学者</div>
+            <div class="char-desc">「万物の真理を解き明かそう。」難解なWH節を読み解き、敵のシールドを貫通して弱点を的確に突くアカデミックな狙撃手。</div>
+            <div class="char-stats">
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期HP:</span>
+                <span class="hud-value">28</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">初期レリック:</span>
+                <span class="hud-value">💾 電子辞書の破片 (制限時間 +1.5秒)</span>
+              </div>
+              <div class="char-stats-item">
+                <span class="char-stats-label">デッキ傾向:</span>
+                <span class="hud-value" style="color: var(--color-purple);">Type 5 (WH節) 特化</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 2.5. NEOW BONUS SCREEN -->
+    <main id="neow-screen" class="screen">
+      <div class="neow-container">
+        <div class="neow-title">
+          <h2>👾 バベルのシステム起動</h2>
+          <p>塔の攻略開始にあたり、以下のシステム・ボーナスを1つ選択してください。</p>
+        </div>
+        <div class="neow-choices">
+          <div class="neow-card safe" onclick="selectNeowBonus('safe')">
+            <span class="neow-icon">🛡️</span>
+            <div class="neow-name">安全ルート (基礎強化)</div>
+            <div class="neow-desc">最大HP +5、およびHPを5回復してスタートする。</div>
+          </div>
+          <div class="neow-card rng" onclick="selectNeowBonus('rng')">
+            <span class="neow-icon">✨</span>
+            <div class="neow-name">お祈りルート (運命変化)</div>
+            <div class="neow-desc">初期デッキの基本カード1枚を、ランダムなコモン以上のカードに変化させる。</div>
+          </div>
+          <div class="neow-card devil" onclick="selectNeowBonus('devil')">
+            <span class="neow-icon">😈</span>
+            <div class="neow-name">悪魔の取引 (高リスク)</div>
+            <div class="neow-desc">最大HPを5失う代わりに、強力な「レアレリック」を1つ得てスタートする。</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 3. MAP SCREEN -->
+    <main id="map-screen" class="screen">
+      <div class="map-container">
+        <div class="map-title">
+          <h2>バベルの塔 進行ルート</h2>
+          <p style="color: var(--text-secondary); margin-top: 5px;">次のフロアのシンボルをクリックして進んでください</p>
+        </div>
+        <div id="map-grid" class="map-grid">
+          <!-- Floors dynamically populated by JS (bottom to top) -->
+        </div>
+      </div>
+    </main>
+
+    <!-- 4. MAP CHOICE SCREEN (Shop or Camp) -->
+    <main id="map-choice-screen" class="screen">
+      <div class="rest-layout">
+        <div class="rest-title" id="choice-floor-label">Floor X: 分かれ道</div>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">どちらの道へ進む？</p>
+        <div class="rest-options">
+          <div class="rest-option-card" onclick="selectChoiceNode('shop')">
+            <div class="rest-option-icon">🛒</div>
+            <div class="rest-option-name">商人（ショップ）</div>
+            <div class="rest-option-desc">新しいAカードやレリックを購入したり、デッキから不要なカードを削除できる。</div>
+          </div>
+          <div class="rest-option-card" onclick="selectChoiceNode('rest')">
+            <div class="rest-option-icon">🏕️</div>
+            <div class="rest-option-name">休憩所（キャンプ）</div>
+            <div class="rest-option-desc">HPを全回復するか、最大HPを+5して英気を養う。</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 5. BATTLE SCREEN -->
+    <main id="battle-screen" class="screen">
+      <div class="battle-layout">
+        <!-- Sentence complete pop-up banner -->
+        <div id="sentence-complete-banner" class="sentence-complete-banner" style="display: none;">
+          <div class="sentence-complete-label">COMPLETE SENTENCE!</div>
+          <div id="completed-sentence-text" class="completed-sentence-text">I wanna smash the boss!</div>
+        </div>
+
+        <!-- Top: Combatants Zone -->
+        <div class="combatants-container">
+          <!-- Player display -->
+          <div class="combatant-panel">
+            <div id="player-avatar-box" class="combatant-avatar-box" data-topping-icon="">
+              <span id="player-avatar">🤠</span>
+            </div>
+            <div class="combatant-name">あなた</div>
+            <div class="status-row">
+              <div class="hp-container">
+                <span class="hp-numeric" id="player-hp-val">30/30</span>
+                <span id="player-shield-badge" class="shield-badge" style="display: none;">🛡️ 0</span>
+              </div>
+              <div class="hp-bar-outer">
+                <div id="player-hp-inner" class="hp-bar-inner" style="width: 100%;"></div>
+              </div>
+              <!-- Player buffs/debuffs -->
+              <div id="player-status-effects" class="buff-debuff-list"></div>
+            </div>
+          </div>
+
+          <!-- Middle: Timer Zone -->
+          <div class="timer-container">
+            <div id="round-timer-box" class="round-timer">
+              <span id="round-timer-val">6.0</span>
+            </div>
+            <div class="timer-label">TIME LIMIT</div>
+          </div>
+
+          <!-- Enemies Zone (supports multiple: front/back) -->
+          <div id="enemies-container" style="display: flex; gap: 20px; align-items: center;">
+            <!-- Enemy 0 Panel (Front) -->
+            <div id="enemy-panel-0" class="combatant-panel" style="position: relative;" onclick="selectTarget(0)">
+              <!-- Intent indicator bubble -->
+              <div id="enemy-intent-desc-0" class="intent-bubble" title="敵の意図">
+                <span id="enemy-intent-icon-0" class="intent-icon">⚔️</span>
+                <span id="enemy-intent-val-0" class="intent-value">6</span>
+              </div>
+              
+              <div id="enemy-avatar-box-0" class="combatant-avatar-box">
+                <span id="enemy-avatar-0">🟢</span>
+              </div>
+              <div id="enemy-name-0" class="combatant-name">タイポ・スライム</div>
+              <div class="status-row">
+                <div class="hp-container">
+                  <span class="hp-numeric" id="enemy-hp-val-0">25/25</span>
+                  <span id="enemy-shield-badge-0" class="shield-badge" style="display: none;">🛡️ 0</span>
+                </div>
+                <div class="hp-bar-outer">
+                  <div id="enemy-hp-inner-0" class="hp-bar-inner" style="width: 100%;"></div>
+                </div>
+                <!-- Enemy buffs/debuffs -->
+                <div id="enemy-status-effects-0" class="buff-debuff-list"></div>
+              </div>
+            </div>
+
+            <!-- Enemy 1 Panel (Back) -->
+            <div id="enemy-panel-1" class="combatant-panel" style="position: relative; display: none;" onclick="selectTarget(1)">
+              <!-- Intent indicator bubble -->
+              <div id="enemy-intent-desc-1" class="intent-bubble" title="敵の意図">
+                <span id="enemy-intent-icon-1" class="intent-icon">⚔️</span>
+                <span id="enemy-intent-val-1" class="intent-value">6</span>
+              </div>
+              
+              <div id="enemy-avatar-box-1" class="combatant-avatar-box">
+                <span id="enemy-avatar-1">🟢</span>
+              </div>
+              <div id="enemy-name-1" class="combatant-name">ちびスライム</div>
+              <div class="status-row">
+                <div class="hp-container">
+                  <span class="hp-numeric" id="enemy-hp-val-1">15/15</span>
+                  <span id="enemy-shield-badge-1" class="shield-badge" style="display: none;">🛡️ 0</span>
+                </div>
+                <div class="hp-bar-outer">
+                  <div id="enemy-hp-inner-1" class="hp-bar-inner" style="width: 100%;"></div>
+                </div>
+                <!-- Enemy buffs/debuffs -->
+                <div id="enemy-status-effects-1" class="buff-debuff-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle-Bottom: Constructing Sentence Real-Time Banner -->
+        <div class="constructing-sentence-area">
+          <div id="constructing-sentence-banner" class="constructing-sentence-banner" style="display: none;"></div>
+        </div>
+
+        <!-- Choice Overlay (B-cards & Toppings selection overlay) -->
+        <div id="choice-overlay-container" class="selection-overlay" style="display: none;">
+          <div id="overlay-title-text" class="overlay-title">繋がる動詞を選択せよ！</div>
+          <div id="reroll-container" style="margin-bottom: 15px; display: none;">
+            <button id="reroll-b-btn" class="action-btn" style="padding: 8px 20px; font-size: 0.9rem; background: var(--color-purple); box-shadow: var(--shadow-neon-purple);" onclick="rerollBChoices()">🔄 Bパーツをリロール (今ターン残り: 1回)</button>
+          </div>
+          <div id="overlay-choice-grid" class="choice-grid">
+            <!-- Choice buttons inserted dynamically -->
+          </div>
+          <div id="overlay-sub-actions" class="sub-action-row" style="display: none;">
+            <!-- Skip buttons etc. -->
+          </div>
+        </div>
+
+        <!-- Small Talk Common Action -->
+        <div id="small-talk-container" style="text-align: center; margin-bottom: 12px; display: none; z-index: 10; justify-content: center;">
+          <button id="small-talk-btn" class="action-btn" style="background: linear-gradient(135deg, #a855f7, #6366f1); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 0 12px rgba(168, 85, 247, 0.4); padding: 8px 24px; font-size: 1rem; font-weight: bold; border-radius: 20px; transition: all 0.2s ease;" onclick="executeSmallTalk()">🗣️ Small Talk (0)</button>
+        </div>
+
+        <!-- Bottom: Interaction Zone (Hand / Energy / Combat Log) -->
+        <div id="player-hand-container" class="player-interaction-zone">
+          <!-- Energy Orb -->
+          <div class="energy-orb-container">
+            <div id="battle-energy-orb" class="energy-orb">3/3</div>
+            <div class="energy-label">ENERGY</div>
+          </div>
+
+          <!-- Draw Pile Badge -->
+          <div class="deck-pile-badge draw-pile" onclick="openDeckViewer('view')" style="cursor: pointer; user-select: none;" title="山札 (クリックで中身を確認)">
+            <span style="font-size: 1.4rem;">🎴</span>
+            <div id="deck-draw-pile-count" style="font-weight: bold; font-family: var(--font-mono); color: #60a5fa; font-size: 1.1rem; margin-top: 2px;">0</div>
+            <div style="font-size: 0.65rem; color: #94a3b8;">山札</div>
+          </div>
+
+          <!-- Hand Cards -->
+          <div id="battle-hand" class="cards-hand">
+            <!-- Player cards inserted dynamically -->
+          </div>
+
+          <!-- Discard Pile Badge -->
+          <div class="deck-pile-badge discard-pile" style="cursor: pointer; user-select: none;" title="捨て札">
+            <span style="font-size: 1.4rem;">🗑️</span>
+            <div id="deck-discard-pile-count" style="font-weight: bold; font-family: var(--font-mono); color: #ef4444; font-size: 1.1rem; margin-top: 2px;">0</div>
+            <div style="font-size: 0.65rem; color: #94a3b8;">捨て札</div>
+          </div>
+
+          <!-- Combat Action Panel -->
+          <div style="display: flex; flex-direction: column; gap: 10px; width: 250px;">
+            <button id="end-turn-btn" class="action-btn" style="background: var(--color-red); box-shadow: var(--shadow-neon-red); height: 50px; font-size: 1.1rem; width: 100%;" onclick="endPlayerTurn()">ターン終了</button>
+            <div id="combat-log-container" class="combat-log-container">
+              <!-- Logs inserted dynamically -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- 6. SHOP SCREEN -->
+    <main id="shop-screen" class="screen">
+      <div class="shop-layout">
+        <div class="game-header" style="margin-bottom: 0; justify-content: space-between; align-items: center;">
+          <h2 style="font-family: var(--font-mono); font-size: 1.6rem; letter-spacing: 2px;">バベルの闇商人</h2>
+          <div style="font-size: 1.25rem; color: var(--color-yellow); font-weight: bold; font-family: var(--font-mono); border: 1px dashed rgba(255, 214, 0, 0.4); padding: 5px 15px; border-radius: 8px; background: rgba(255, 214, 0, 0.03);">
+            🪙 所持金: <span id="shop-player-gold">0</span> Gold
+          </div>
+          <button class="action-btn" onclick="leaveShop()">ショップを出る</button>
+        </div>
+        <div class="shop-main">
+          <!-- Left: Cards Pool -->
+          <div class="shop-panel">
+            <h3>🎴 カード購入</h3>
+            <div id="shop-cards-grid" class="shop-items-grid">
+              <!-- JS shop cards -->
+            </div>
+          </div>
+          <!-- Right: Relics / Services -->
+          <div class="shop-panel">
+            <h3>💎 秘宝 ＆ デッキ圧縮 ＆ カード強化</h3>
+            <div id="shop-relics-grid" class="shop-items-grid" style="grid-template-columns: 1fr; gap: 10px; margin-bottom: 15px;">
+              <!-- JS shop relics -->
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button id="shop-remove-btn" class="action-btn" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; font-size: 0.9rem;" onclick="startShopCardRemoval()">
+                <span>🗑️ デッキからカードを1枚削除する</span>
+                <span id="shop-remove-price" class="shop-price-tag">🪙 50</span>
+              </button>
+              <button id="shop-upgrade-btn" class="action-btn" style="background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); color: #c084fc; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; font-size: 0.9rem;" onclick="startShopCardUpgrade()">
+                <span>⚡ カードを1枚強化 (アップグレード) する</span>
+                <span id="shop-upgrade-price" class="shop-price-tag">🪙 50</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 7. REST SCREEN -->
+    <main id="rest-screen" class="screen">
+      <div class="rest-layout">
+        <div class="rest-title">🏕️ 憩いのキャンプファイヤー</div>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">パチパチと燃える火を囲み、次に備えて準備をする。</p>
+        <div class="rest-options">
+          <div id="rest-btn-heal" class="rest-option-card" onclick="restOptionHeal()">
+            <div class="rest-option-icon">🔥</div>
+            <div class="rest-option-name">休息 (HP全回復)</div>
+            <div class="rest-option-desc">傷ついた体を癒し、HPを完全に元通りにする。</div>
+          </div>
+          <div id="rest-btn-maxhp" class="rest-option-card" onclick="restOptionMaxHp()">
+            <div class="rest-option-icon">🏋️</div>
+            <div class="rest-option-name">鍛錬 (最大HP +8)</div>
+            <div class="rest-option-desc">最大HPの上限を+8します。※現在HPは回復しません。</div>
+          </div>
+          <div id="rest-btn-upgrade" class="rest-option-card" onclick="restOptionUpgrade()">
+            <div class="rest-option-icon">⚡</div>
+            <div class="rest-option-name">強化 (カードアップグレード)</div>
+            <div class="rest-option-desc">手札やデッキからAカードを1枚選び、+付きの強化版に進化させます。</div>
+          </div>
+          <div id="rest-btn-remove" class="rest-option-card" onclick="restOptionRemove()">
+            <div class="rest-option-icon">🗑️</div>
+            <div class="rest-option-name">破棄 (カード削除 / 🪙 50)</div>
+            <div class="rest-option-desc">ゴールドを50消費して、デッキから不要なカードを1枚完全に削除(圧縮)します。</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 8. VICTORY SCREEN -->
+    <main id="victory-screen" class="screen">
+      <div class="end-screen">
+        <span style="font-size: 5rem;">👑</span>
+        <div class="end-title victory">VICTORY</div>
+        <p style="font-size: 1.3rem; color: var(--text-secondary);">バベルの鬼教官の試練を乗り越え、文法の頂を制覇した！</p>
+        <div class="end-stats">
+          <div class="end-stat-row">
+            <span class="end-stat-label">残りHP:</span>
+            <span id="victory-hp" class="hud-value">30/30</span>
+          </div>
+          <div class="end-stat-row">
+            <span class="end-stat-label">所持金:</span>
+            <span id="victory-gold" class="hud-value">120</span>
+          </div>
+          <div class="end-stat-row">
+            <span class="end-stat-label">最終デッキ:</span>
+            <span id="victory-deck" class="hud-value">12枚</span>
+          </div>
+        </div>
+        <button class="action-btn" style="padding: 12px 30px; font-size: 1.1rem;" onclick="restartGame()">もう一度挑戦する</button>
+      </div>
+    </main>
+
+    <!-- 9. DEFEAT SCREEN -->
+    <main id="defeat-screen" class="screen">
+      <div class="end-screen">
+        <span style="font-size: 5rem;">💀</span>
+        <div class="end-title defeat">DEFEAT</div>
+        <p style="font-size: 1.3rem; color: var(--text-secondary);">文法の奈落へ叩き落とされた... 修行し直すべし。</p>
+        <div class="end-stats">
+          <div class="end-stat-row">
+            <span class="end-stat-label">到達フロア:</span>
+            <span id="defeat-floor" class="hud-value">F0</span>
+          </div>
+          <div class="end-stat-row">
+            <span class="end-stat-label">所持金:</span>
+            <span id="defeat-gold" class="hud-value">40</span>
+          </div>
+          <div class="end-stat-row">
+            <span class="end-stat-label">最終デッキ:</span>
+            <span id="defeat-deck" class="hud-value">10枚</span>
+          </div>
+        </div>
+        <button class="action-btn" style="padding: 12px 30px; font-size: 1.1rem; background: var(--color-red);" onclick="restartGame()">再挑戦する</button>
+      </div>
+    </main>
+
+    <!-- DECK VIEWER OVERLAY -->
+    <div id="deck-overlay" class="deck-overlay">
+      <div class="deck-overlay-header">
+        <div class="deck-overlay-title">🎴 所持カード一覧</div>
+        <button class="action-btn secondary" onclick="closeDeckViewer()">閉じる</button>
+      </div>
+      <div id="deck-overlay-grid" class="deck-overlay-grid">
+        <!-- JS deck cards -->
+      </div>
+    </div>
+
+    <!-- GRAMMAR DICTIONARY OVERLAY (B-CARDS GALLERY) -->
+    <div id="dict-overlay" class="deck-overlay">
+      <div class="deck-overlay-header">
+        <div class="deck-overlay-title">📖 文法辞典 (アクション・Bカード一覧)</div>
+        <button class="action-btn secondary" onclick="closeDictViewer()">閉じる</button>
+      </div>
+      <div class="dict-overlay-tabs" style="display: flex; gap: 10px; padding: 10px 20px; border-bottom: 1px solid var(--panel-border);">
+        <button id="tab-btn-1" class="action-btn tab-btn type-1 active" onclick="switchDictTab(1)" style="flex:1; padding: 8px;">T1: 原形</button>
+        <button id="tab-btn-2" class="action-btn tab-btn type-2" onclick="switchDictTab(2)" style="flex:1; padding: 8px;">T2: ing形</button>
+        <button id="tab-btn-3" class="action-btn tab-btn type-3" onclick="switchDictTab(3)" style="flex:1; padding: 8px;">T3: 過去分詞</button>
+        <button id="tab-btn-4" class="action-btn tab-btn type-4" onclick="switchDictTab(4)" style="flex:1; padding: 8px;">T4: S+V節</button>
+        <button id="tab-btn-5" class="action-btn tab-btn type-5" onclick="switchDictTab(5)" style="flex:1; padding: 8px;">T5: WH節</button>
+      </div>
+      <div id="dict-overlay-grid" class="deck-overlay-grid" style="padding: 20px;">
+        <!-- JS dict choices -->
+      </div>
+    </div>
+
+    <!-- GRAMMAR EXPLANATION MODAL -->
+    <div id="grammar-modal" class="grammar-modal">
+      <div class="grammar-modal-content">
+        <div class="grammar-modal-header">
+          <div class="grammar-modal-title">⚠️ 文法エラー解説</div>
+        </div>
+        <div class="grammar-modal-body">
+          <div class="grammar-expression-box">
+            <span id="grammar-part-a" class="grammar-part-a"></span>
+            <span id="grammar-part-b" class="grammar-part-b-wrong"></span>
+          </div>
+          <div id="grammar-explanation-text" class="grammar-explanation-text">
+            <!-- Dynamic explanation text -->
+          </div>
+        </div>
+        <div class="grammar-modal-footer">
+          <button id="grammar-close-btn" class="action-btn primary" style="width: 100%;">文法ルールを理解した</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD PREVIEW MODAL -->
+    <div id="card-preview-modal" class="grammar-modal">
+      <div class="grammar-modal-content" style="max-width: 400px; text-align: center; padding: 25px;">
+        <div class="grammar-modal-header" style="justify-content: center; margin-bottom: 20px;">
+          <div class="grammar-modal-title">🎴 カード詳細プレビュー</div>
+        </div>
+        <div id="preview-card-container" style="display: flex; justify-content: center; margin-bottom: 25px;">
+          <!-- Card rendered here -->
+        </div>
+        <div class="preview-actions" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+          <button id="preview-play-btn" class="action-btn primary" style="width: 100%;" onclick="confirmPlayCard()">このカードをプレイ</button>
+          <button class="action-btn secondary" style="width: 100%;" onclick="closeCardPreview()">戻る</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELIC DRAFT MODAL -->
+    <div id="relic-draft-modal" class="grammar-modal">
+      <div class="grammar-modal-content" style="max-width: 600px; text-align: center; padding: 30px;">
+        <h2 style="font-family: var(--font-mono); margin-bottom: 15px; color: var(--color-yellow); font-size: 1.8rem;">🏆 1層ボス突破：秘宝の選択</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.95rem;">あなたのプレイスタイルに合わせた強力なレリックを1つ選択してください。</p>
+        <div id="relic-draft-grid" class="shop-items-grid" style="grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; max-height: 350px; overflow-y: auto;">
+          <!-- Dynamic relic choices -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
