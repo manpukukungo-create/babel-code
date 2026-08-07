@@ -2047,103 +2047,244 @@ body::after {
    ========================================== */
 
 @media (max-width: 768px) {
-  body {
-    overflow-y: auto;
-    height: auto;
-  }
-  
-  #app {
-    height: auto;
-    min-height: 100vh;
+  /* Prevent any vertical/horizontal scrolling on mobile screens */
+  html, body, #app {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    top: 0;
+    left: 0;
   }
   
   .screen {
-    position: relative;
-    height: auto;
-    min-height: 100vh;
-    padding: 12px;
-    overflow-y: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100vh !important;
+    padding: 6px !important;
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   
   /* Global HUD adjustments */
   .game-header {
-    flex-direction: column;
-    gap: 8px;
-    padding: 8px;
+    flex-direction: row !important;
+    gap: 4px;
+    padding: 4px 8px !important;
     border-radius: 8px;
+    margin-bottom: 4px !important;
+    font-size: 0.8rem !important;
   }
   
   .hud-group {
-    width: 100%;
-    justify-content: space-around;
-    gap: 10px;
+    width: auto !important;
+    gap: 8px !important;
   }
   
   .hud-item {
-    font-size: 0.9rem;
+    font-size: 0.8rem !important;
+    gap: 3px !important;
   }
   
   .hud-hp-bar {
-    width: 80px;
+    width: 60px !important;
+    height: 8px !important;
+  }
+  
+  .hud-value {
+    font-size: 0.8rem !important;
+  }
+
+  .hud-potion-container {
+    gap: 3px !important;
+    margin-right: 2px !important;
+  }
+
+  .potion-btn {
+    padding: 3px 6px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .game-header .action-btn {
+    padding: 4px 8px !important;
+    font-size: 0.75rem !important;
+    margin-right: 2px !important;
   }
   
   /* Character Select Screen Mobile Layout */
   .char-select-container {
     flex-direction: column !important;
-    gap: 15px !important;
-    overflow-y: visible !important;
-    height: auto !important;
-    padding: 10px 0;
+    gap: 10px !important;
+    overflow-y: auto !important;
+    height: 80vh !important;
+    padding: 5px 0;
   }
   
   .char-card {
     width: 100% !important;
     min-height: auto !important;
+    padding: 10px !important;
   }
   
   /* Neow Screen Mobile Layout */
   .neow-choices {
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 10px !important;
   }
   
-  /* Battle Arena Layout - Vertical Stack (Fixed Selector class from .combat-arena to .combatants-container) */
+  /* Battle Arena Layout - Fit everything on one screen (no scroll) */
   .combatants-container {
     flex-direction: column !important;
-    height: auto !important;
-    gap: 15px !important;
-    padding: 10px 0 !important;
-    min-height: 250px;
+    height: 38% !important; /* Strict height limit for battle area */
+    min-height: auto !important;
+    justify-content: space-between !important;
+    padding: 0 5px !important;
+    gap: 6px !important;
+    margin-bottom: 4px !important;
   }
-  
-  .timer-container {
-    position: relative !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 8px 0;
+
+  /* Two enemies horizontally, player vertically below them */
+  .combatants-container > div:first-child {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    justify-content: space-around !important;
+    gap: 8px !important;
   }
   
   .combatant-panel {
-    width: 100% !important;
-    max-width: 450px;
-    margin: 0 auto;
-    padding: 10px !important;
+    width: 48% !important;
+    padding: 6px !important;
+    gap: 4px !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 8px !important;
+  }
+
+  /* Player panel - horizontal flow to save height */
+  .combatant-panel#player-panel {
+    width: 82% !important;
+    margin: 0 auto !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    padding: 5px !important;
   }
   
   .combatant-avatar-box {
-    width: 65px !important;
-    height: 65px !important;
-    font-size: 2.2rem !important;
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 1.8rem !important;
+  }
+
+  .combatant-avatar-box::after {
+    font-size: 1.1rem !important;
+    top: -5px !important;
+    right: -5px !important;
+  }
+
+  .combatant-name {
+    font-size: 0.78rem !important;
+    white-space: nowrap;
+  }
+
+  .hp-numeric {
+    font-size: 0.72rem !important;
+  }
+
+  .hp-bar-outer {
+    height: 5px !important;
+  }
+
+  .shield-badge {
+    font-size: 0.7rem !important;
+    padding: 1px 4px !important;
+  }
+
+  .buff-debuff-list {
+    margin-top: 3px !important;
+    gap: 3px !important;
+  }
+
+  .status-effect {
+    font-size: 0.65rem !important;
+    padding: 1px 4px !important;
+  }
+
+  .intent-bubble {
+    padding: 2px 6px !important;
+    font-size: 0.7rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .intent-icon {
+    font-size: 0.85rem !important;
+  }
+
+  /* Timer positioning on Player row */
+  .timer-container {
+    position: absolute !important;
+    right: 15px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin: 0 !important;
+    z-index: 5;
+  }
+
+  .round-timer {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
+    border-width: 2px !important;
+  }
+
+  /* Compact Built Sentence display */
+  #constructing-sentence-banner {
+    padding: 3px !important;
+    margin: 3px 0 !important;
+  }
+
+  #constructing-sentence-banner .english {
+    font-size: 0.95rem !important;
+  }
+
+  #constructing-sentence-banner .japanese {
+    font-size: 0.72rem !important;
+  }
+
+  #completed-sentence-text {
+    font-size: 1.05rem !important;
   }
   
-  /* Horizontal Flick Scrolling for Hand Cards */
+  /* Player Action / Hand Zone */
   .player-interaction-zone {
-    height: auto !important;
-    margin-top: 15px;
-    padding: 10px !important;
+    height: 42% !important; /* Strict height limit for interaction */
+    margin-top: 0 !important;
+    padding: 5px !important;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+  
+  .energy-orb-container {
+    gap: 2px !important;
+  }
+
+  .energy-orb {
+    width: 46px !important;
+    height: 46px !important;
+    font-size: 1.2rem !important;
+  }
+
+  .energy-label {
+    font-size: 0.6rem !important;
   }
   
   #battle-hand {
@@ -2151,94 +2292,129 @@ body::after {
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     scroll-behavior: smooth;
-    padding: 10px 5px !important;
-    gap: 12px !important;
-    height: 210px !important;
-    width: 100% !important;
+    padding: 5px 0 !important;
+    gap: 8px !important;
+    height: 140px !important;
+    flex: 1 !important;
     -webkit-overflow-scrolling: touch;
   }
   
   .game-card {
-    flex: 0 0 135px !important; /* Fixed width in horizontal list */
-    height: 180px !important;
-    font-size: 0.8rem;
+    flex: 0 0 100px !important; /* Micro card sizing for strict height fit */
+    height: 130px !important;
+    padding: 6px !important;
+    border-radius: 8px !important;
   }
   
   .game-card .card-title {
-    font-size: 0.85rem !important;
+    font-size: 0.72rem !important;
+    margin: 3px 0 !important;
   }
   
-  .game-card .card-body {
-    font-size: 0.65rem !important;
-    line-height: 1.1;
-    margin-top: 6px !important;
+  .game-card .card-translation {
+    font-size: 0.6rem !important;
+    margin-top: 2px !important;
   }
   
-  .game-card .card-next-hint {
+  .game-card .card-cost {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 0.7rem !important;
+  }
+  
+  .game-card .card-type-tag {
     font-size: 0.6rem !important;
   }
   
-  /* B Choices & Overlay Grid Mobile Tuning */
+  /* Hide heavy description texts on hand cards (viewable via modal preview click) */
+  .game-card .card-body, 
+  .game-card .card-next-hint, 
+  .game-card .card-mod-badge {
+    display: none !important;
+  }
+
+  #end-turn-btn {
+    padding: 10px 12px !important;
+    font-size: 0.82rem !important;
+  }
+  
+  /* B Choices & Overlay Grid: 2 Columns Side-by-Side */
   .choice-overlay {
-    width: 95% !important;
-    padding: 15px !important;
-    max-height: 90vh;
+    width: 96% !important;
+    padding: 10px !important;
+    max-height: 85vh;
+  }
+
+  #overlay-title-text {
+    font-size: 0.95rem !important;
+    margin-bottom: 8px !important;
   }
   
   .choice-grid {
-    grid-template-columns: 1fr !important; /* Stack choices vertically */
-    gap: 10px !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
   }
   
   .choice-btn {
-    padding: 12px !important;
+    padding: 6px !important;
+    min-height: 58px !important;
+    border-radius: 8px !important;
+    gap: 2px !important;
   }
   
   .choice-btn .choice-text {
-    font-size: 1rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  .choice-btn .choice-desc {
+    font-size: 0.65rem !important;
   }
   
-  /* Rest & Shop screen Mobile Layout */
+  /* Deck and Dict Overlay Grid */
+  .deck-overlay-content, .dict-overlay-content {
+    width: 96% !important;
+    max-height: 88vh !important;
+    padding: 10px !important;
+  }
+
+  #deck-overlay-grid, #dict-overlay-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  
+  /* Shop screen Mobile Layout */
   .rest-layout, .shop-layout {
     height: auto !important;
-    padding: 10px !important;
+    padding: 8px !important;
   }
   
   .rest-options {
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 8px !important;
   }
   
   .shop-grid {
     grid-template-columns: 1fr !important;
-    gap: 20px !important;
-  }
-  
-  .shop-section {
-    padding: 10px !important;
+    gap: 15px !important;
   }
   
   .shop-shelf {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   
-  .shop-card-item {
-    font-size: 0.8rem;
-  }
-  
   /* General Modal Tuning */
   .modal-content {
-    width: 95% !important;
-    padding: 15px !important;
+    width: 96% !important;
+    padding: 12px !important;
   }
   
   #small-talk-container {
-    margin-bottom: 6px !important;
+    margin-bottom: 4px !important;
   }
   
   #small-talk-btn {
-    padding: 6px 16px !important;
-    font-size: 0.85rem !important;
+    padding: 4px 12px !important;
+    font-size: 0.8rem !important;
   }
 }
 
