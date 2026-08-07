@@ -2107,18 +2107,33 @@ body::after {
     gap: 12px !important;
   }
   
-  /* Battle Arena Layout - Vertical Stack */
-  .combat-arena {
+  /* Battle Arena Layout - Vertical Stack (Fixed Selector class from .combat-arena to .combatants-container) */
+  .combatants-container {
     flex-direction: column !important;
     height: auto !important;
     gap: 15px !important;
     padding: 10px 0 !important;
+    min-height: 250px;
+  }
+  
+  .timer-container {
+    position: relative !important;
+    left: auto !important;
+    transform: none !important;
+    margin: 8px 0;
   }
   
   .combatant-panel {
     width: 100% !important;
     max-width: 450px;
     margin: 0 auto;
+    padding: 10px !important;
+  }
+  
+  .combatant-avatar-box {
+    width: 65px !important;
+    height: 65px !important;
+    font-size: 2.2rem !important;
   }
   
   /* Horizontal Flick Scrolling for Hand Cards */
@@ -2224,6 +2239,128 @@ body::after {
   #small-talk-btn {
     padding: 6px 16px !important;
     font-size: 0.85rem !important;
+  }
+}
+
+/* ==========================================================
+   LANDSCAPE (HORIZONTAL) PHONE RESPONSIVE MEDIA QUERIES
+   ========================================================== */
+@media (max-height: 520px) and (orientation: landscape) {
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+  
+  .screen {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+
+  .game-header {
+    flex-direction: row !important;
+    padding: 5px 10px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .hud-group {
+    width: auto !important;
+    gap: 12px !important;
+  }
+
+  /* Compact Battle Layout for Horizontal view */
+  .battle-layout {
+    justify-content: flex-start !important;
+    gap: 10px;
+  }
+
+  .combatants-container {
+    flex-direction: row !important;
+    height: auto !important;
+    min-height: 130px !important;
+    padding: 0 15px !important;
+    justify-content: space-around !important;
+  }
+
+  .combatant-panel {
+    width: 44% !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 6px !important;
+  }
+
+  .combatant-avatar-box {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 1.8rem !important;
+  }
+
+  .timer-container {
+    margin: 0 !important;
+  }
+
+  .round-timer {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 1.3rem !important;
+  }
+
+  /* Compact Hand Zone for Landscape */
+  .player-interaction-zone {
+    height: auto !important;
+    margin-top: 5px !important;
+    padding: 5px 15px !important;
+    flex-direction: row !important;
+    gap: 15px !important;
+    align-items: center !important;
+  }
+
+  .energy-orb {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.3rem !important;
+  }
+
+  #battle-hand {
+    height: 145px !important;
+  }
+
+  .game-card {
+    flex: 0 0 115px !important;
+    height: 125px !important;
+    padding: 6px !important;
+  }
+
+  .game-card .card-title {
+    font-size: 0.72rem !important;
+  }
+
+  .game-card .card-body, .game-card .card-translation, .game-card .card-next-hint {
+    display: none !important; /* Hide details in micro horizontal cards */
+  }
+
+  /* Overlay choices grid (B choices) on landscape */
+  .choice-overlay {
+    max-height: 95vh !important;
+    padding: 10px !important;
+  }
+
+  .choice-grid {
+    grid-template-columns: repeat(2, 1fr) !important; /* Side by side on wide horizontal screen */
+    gap: 8px !important;
+  }
+
+  .choice-btn {
+    min-height: 55px !important;
+    padding: 6px !important;
+  }
+
+  .choice-btn .choice-text {
+    font-size: 0.85rem !important;
+  }
+
+  .choice-btn .choice-desc {
+    font-size: 0.7rem !important;
   }
 }
 
