@@ -2067,9 +2067,13 @@ body::after {
     max-height: 100vh !important;
     padding: 6px !important;
     overflow: hidden !important;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
+  }
+  
+  .screen.active {
+    display: flex !important;
   }
   
   /* Global HUD adjustments */
