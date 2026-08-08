@@ -2067,7 +2067,7 @@ body::after {
     max-height: 100vh !important;
     padding: 6px !important;
     overflow: hidden !important;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
@@ -2124,37 +2124,106 @@ body::after {
   /* Character Select Screen Mobile Layout */
   .char-select-container {
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 8px !important;
     overflow-y: auto !important;
-    height: 80vh !important;
+    height: 82vh !important;
     padding: 5px 0;
   }
   
   .char-card {
     width: 100% !important;
     min-height: auto !important;
-    padding: 10px !important;
+    padding: 8px !important;
   }
   
-  /* Neow Screen Mobile Layout */
-  .neow-choices {
+  /* Neow Screen Mobile Layout - Side-by-Side Horizontal to fit in 1 screen */
+  .neow-container {
+    height: 100% !important;
+    display: flex !important;
     flex-direction: column !important;
-    gap: 10px !important;
+    justify-content: space-around !important;
+  }
+
+  .neow-choices {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+  }
+
+  .neow-card {
+    width: 32% !important;
+    padding: 10px 4px !important;
+    min-height: auto !important;
+    font-size: 0.72rem !important;
+    border-radius: 8px !important;
+  }
+
+  .neow-icon {
+    font-size: 1.4rem !important;
+  }
+
+  .neow-name {
+    font-size: 0.8rem !important;
+    margin: 4px 0 !important;
+    line-height: 1.1 !important;
+  }
+
+  .neow-desc {
+    font-size: 0.62rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Map Screen Mobile Layout - Compact Grid */
+  .map-container {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  .map-grid {
+    padding: 12px !important;
+    margin: 0 auto !important;
+    height: 72vh !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-around !important;
+  }
+
+  .map-floor {
+    padding: 0 !important;
+  }
+
+  .map-floor:not(:last-child)::after {
+    bottom: -12px !important;
+  }
+
+  .map-node {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.3rem !important;
+  }
+
+  .node-label {
+    bottom: -16px !important;
+    font-size: 0.65rem !important;
   }
   
   /* Battle Arena Layout - Fit everything on one screen (no scroll) */
   .combatants-container {
-    flex-direction: column !important;
+    flex-direction: column-reverse !important; /* Stack: Enemies top, Player bottom */
     height: 38% !important; /* Strict height limit for battle area */
     min-height: auto !important;
-    justify-content: space-between !important;
+    justify-content: space-around !important;
     padding: 0 5px !important;
     gap: 6px !important;
     margin-bottom: 4px !important;
   }
 
   /* Two enemies horizontally, player vertically below them */
-  .combatants-container > div:first-child {
+  #enemies-container {
     display: flex !important;
     flex-direction: row !important;
     width: 100% !important;
@@ -2166,18 +2235,21 @@ body::after {
     width: 48% !important;
     padding: 6px !important;
     gap: 4px !important;
-    background: rgba(0, 0, 0, 0.3) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
     border-radius: 8px !important;
+    min-height: auto !important;
   }
 
   /* Player panel - horizontal flow to save height */
-  .combatant-panel#player-panel {
+  .combatants-container > .combatant-panel {
     width: 82% !important;
     margin: 0 auto !important;
     flex-direction: row !important;
     justify-content: center !important;
-    gap: 15px !important;
+    gap: 12px !important;
     padding: 5px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-radius: 8px !important;
   }
   
   .combatant-avatar-box {
@@ -2267,24 +2339,27 @@ body::after {
   
   /* Player Action / Hand Zone */
   .player-interaction-zone {
-    height: 42% !important; /* Strict height limit for interaction */
+    height: 150px !important; /* Strict height limit for interaction */
+    max-height: 150px !important;
     margin-top: 0 !important;
-    padding: 5px !important;
-    display: flex;
+    padding: 2px 8px !important;
+    display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
     gap: 8px !important;
+    position: relative !important;
   }
   
   .energy-orb-container {
+    flex: 0 0 50px !important;
     gap: 2px !important;
   }
 
   .energy-orb {
-    width: 46px !important;
-    height: 46px !important;
-    font-size: 1.2rem !important;
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.1rem !important;
   }
 
   .energy-label {
@@ -2298,14 +2373,15 @@ body::after {
     scroll-behavior: smooth;
     padding: 5px 0 !important;
     gap: 8px !important;
-    height: 140px !important;
+    height: 135px !important;
     flex: 1 !important;
+    margin: 0 4px !important;
     -webkit-overflow-scrolling: touch;
   }
   
   .game-card {
-    flex: 0 0 100px !important; /* Micro card sizing for strict height fit */
-    height: 130px !important;
+    flex: 0 0 90px !important; /* Micro card sizing for strict height fit */
+    height: 120px !important;
     padding: 6px !important;
     border-radius: 8px !important;
   }
@@ -2330,16 +2406,75 @@ body::after {
     font-size: 0.6rem !important;
   }
   
-  /* Hide heavy description texts on hand cards (viewable via modal preview click) */
+  /* Hide heavy description texts on hand cards */
   .game-card .card-body, 
   .game-card .card-next-hint, 
   .game-card .card-mod-badge {
     display: none !important;
   }
 
+  /* Relocate Draw / Discard pile badges as absolute float badges on top of Hand Zone */
+  .deck-pile-badge {
+    position: absolute !important;
+    bottom: 142px !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px !important;
+    padding: 2px 6px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 4px !important;
+    align-items: center !important;
+    z-index: 100 !important;
+    width: auto !important;
+    height: auto !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+  }
+  
+  .deck-pile-badge.draw-pile {
+    left: 10px !important;
+  }
+  
+  .deck-pile-badge.discard-pile {
+    right: 10px !important;
+  }
+  
+  .deck-pile-badge span {
+    font-size: 0.95rem !important;
+  }
+  
+  .deck-pile-badge div {
+    font-size: 0.75rem !important;
+    margin: 0 !important;
+    display: inline !important;
+  }
+  
+  .deck-pile-badge div:last-child {
+    display: none !important; /* Hide label */
+  }
+
+  /* Compact End Turn button & Disable Log */
+  .player-interaction-zone > div:last-child {
+    flex: 0 0 78px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    width: 78px !important;
+  }
+
   #end-turn-btn {
-    padding: 10px 12px !important;
-    font-size: 0.82rem !important;
+    width: 100% !important;
+    height: 48px !important;
+    padding: 0 4px !important;
+    font-size: 0.8rem !important;
+    border-radius: 6px !important;
+    white-space: normal !important;
+    line-height: 1.1 !important;
+  }
+
+  .combat-log-container {
+    display: none !important;
   }
   
   /* B Choices & Overlay Grid: 2 Columns Side-by-Side */
