@@ -2067,7 +2067,7 @@ body::after {
     max-height: 100vh !important;
     padding: 6px !important;
     overflow: hidden !important;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
   }
@@ -2113,6 +2113,19 @@ body::after {
   .potion-btn {
     padding: 3px 6px !important;
     font-size: 0.7rem !important;
+    transition: all 0.2s;
+  }
+
+  .potion-btn.selected {
+    border-color: var(--color-yellow) !important;
+    box-shadow: 0 0 10px var(--color-yellow) !important;
+    background: rgba(255, 214, 0, 0.25) !important;
+    animation: selectedBlink 1.2s infinite !important;
+  }
+
+  @keyframes selectedBlink {
+    0%, 100% { opacity: 1; border-color: var(--color-yellow); }
+    50% { opacity: 0.5; border-color: #fff; }
   }
 
   .game-header .action-btn {
@@ -2136,53 +2149,74 @@ body::after {
     padding: 8px !important;
   }
   
-  /* Neow Screen Mobile Layout - Side-by-Side Horizontal to fit in 1 screen */
+  /* Neow Screen Mobile Layout - Ultra compact row fitting 1 screen */
   .neow-container {
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-around !important;
+    padding: 5px !important;
+  }
+
+  .neow-title {
+    margin-bottom: 5px !important;
+  }
+
+  .neow-title h2 {
+    font-size: 1.2rem !important;
+  }
+
+  .neow-title p {
+    font-size: 0.75rem !important;
   }
 
   .neow-choices {
     flex-direction: row !important;
     justify-content: space-between !important;
-    gap: 6px !important;
+    gap: 4px !important;
   }
 
   .neow-card {
     width: 32% !important;
-    padding: 10px 4px !important;
+    padding: 6px 2px !important;
     min-height: auto !important;
-    font-size: 0.72rem !important;
-    border-radius: 8px !important;
+    font-size: 0.65rem !important;
+    border-radius: 6px !important;
   }
 
   .neow-icon {
-    font-size: 1.4rem !important;
+    font-size: 1.1rem !important;
   }
 
   .neow-name {
-    font-size: 0.8rem !important;
-    margin: 4px 0 !important;
+    font-size: 0.72rem !important;
+    margin: 2px 0 !important;
     line-height: 1.1 !important;
   }
 
   .neow-desc {
-    font-size: 0.62rem !important;
-    line-height: 1.2 !important;
+    font-size: 0.58rem !important;
+    line-height: 1.15 !important;
   }
 
-  /* Map Screen Mobile Layout - Compact Grid */
+  /* Map Screen Mobile Layout - Ultra Compact Node Grid */
   .map-container {
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
+    padding: 4px !important;
+  }
+
+  .map-title h2 {
+    font-size: 1.2rem !important;
+  }
+  .map-title p {
+    font-size: 0.7rem !important;
   }
 
   .map-grid {
-    padding: 12px !important;
+    padding: 8px !important;
     margin: 0 auto !important;
     height: 72vh !important;
     width: 100% !important;
@@ -2197,18 +2231,18 @@ body::after {
   }
 
   .map-floor:not(:last-child)::after {
-    bottom: -12px !important;
+    bottom: -10px !important;
   }
 
   .map-node {
-    width: 44px !important;
-    height: 44px !important;
-    font-size: 1.3rem !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1.15rem !important;
   }
 
   .node-label {
-    bottom: -16px !important;
-    font-size: 0.65rem !important;
+    bottom: -15px !important;
+    font-size: 0.6rem !important;
   }
   
   /* Battle Arena Layout - Fit everything on one screen (no scroll) */
@@ -2339,8 +2373,8 @@ body::after {
   
   /* Player Action / Hand Zone */
   .player-interaction-zone {
-    height: 150px !important; /* Strict height limit for interaction */
-    max-height: 150px !important;
+    height: 140px !important; /* Strict height limit for interaction */
+    max-height: 140px !important;
     margin-top: 0 !important;
     padding: 2px 8px !important;
     display: flex !important;
@@ -2373,37 +2407,37 @@ body::after {
     scroll-behavior: smooth;
     padding: 5px 0 !important;
     gap: 8px !important;
-    height: 135px !important;
+    height: 125px !important;
     flex: 1 !important;
     margin: 0 4px !important;
     -webkit-overflow-scrolling: touch;
   }
   
   .game-card {
-    flex: 0 0 90px !important; /* Micro card sizing for strict height fit */
-    height: 120px !important;
-    padding: 6px !important;
-    border-radius: 8px !important;
+    flex: 0 0 85px !important; /* Extremely micro card sizing to prevent screen overflow */
+    height: 115px !important;
+    padding: 4px !important;
+    border-radius: 6px !important;
   }
   
   .game-card .card-title {
-    font-size: 0.72rem !important;
-    margin: 3px 0 !important;
+    font-size: 0.65rem !important;
+    margin: 2px 0 !important;
   }
   
   .game-card .card-translation {
-    font-size: 0.6rem !important;
-    margin-top: 2px !important;
+    font-size: 0.55rem !important;
+    margin-top: 1px !important;
   }
   
   .game-card .card-cost {
-    width: 18px !important;
-    height: 18px !important;
-    font-size: 0.7rem !important;
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 0.65rem !important;
   }
   
   .game-card .card-type-tag {
-    font-size: 0.6rem !important;
+    font-size: 0.55rem !important;
   }
   
   /* Hide heavy description texts on hand cards */
@@ -2416,7 +2450,7 @@ body::after {
   /* Relocate Draw / Discard pile badges as absolute float badges on top of Hand Zone */
   .deck-pile-badge {
     position: absolute !important;
-    bottom: 142px !important;
+    bottom: 132px !important;
     background: rgba(15, 23, 42, 0.85) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 4px !important;

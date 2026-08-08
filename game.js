@@ -2936,6 +2936,16 @@ function usePotion(index) {
   const potion = state.player.potions[index];
   if (!potion) return;
   
+  // Double tap confirmation logic
+  if (state.player.selectedPotionIndex !== index) {
+    state.player.selectedPotionIndex = index;
+    showToast(`🧪【${getPotionName(potion)}】効果: ${getPotionDesc(potion)} (使用するにはもう一度タップしてください！)`, "info");
+    render();
+    return;
+  }
+  
+  state.player.selectedPotionIndex = null;
+  
   if (potion === 'potion_hp') {
     healPlayer(12);
     showToast("HPポーションを使用してHPを12回復しました！", "success");
@@ -2957,6 +2967,13 @@ function usePotion(index) {
   
   state.player.potions[index] = null;
   render();
+}
+
+function getPotionDesc(id) {
+  if (id === 'potion_hp') return 'HPを12回復します。';
+  if (id === 'potion_shield') return '防壁シールド+15を獲得します。';
+  if (id === 'potion_energy') return 'エナジーを2ポイント回復します。';
+  return '';
 }
 
 function obtainPotion(potionId) {
@@ -3013,6 +3030,7 @@ function selectNeowBonus(type) {
 // --- Game Initialization ---
 function initGame(className) {
   state.player.class = className || 'default';
+  state.player.selectedPotionIndex = null;
   
   // クラスごとのステータス・デッキ・レリック分岐設定
   if (className === 'wizard') {
@@ -3215,6 +3233,13 @@ function renderHUD() {
         span.title = `${r.name}: ${r.desc}`;
         span.style.fontSize = '1.3rem';
         span.innerText = r.icon;
+        
+        // Tap handler for relic details on mobile devices
+        span.addEventListener('click', (e) => {
+          e.stopPropagation();
+          showToast(`🔮【${r.name}】効果: ${r.desc}`, "info");
+        });
+        
         relicList.appendChild(span);
       }
     });
@@ -3225,11 +3250,12 @@ function renderHUD() {
     if (slotBtn) {
       const potion = state.player.potions[i];
       if (potion) {
-        slotBtn.className = 'potion-btn';
-        if (potion === 'potion_hp') slotBtn.innerText = '🧪 赤 (HP+12)';
-        else if (potion === 'potion_shield') slotBtn.innerText = '🧪 青 (防+15)';
-        else if (potion === 'potion_energy') slotBtn.innerText = '🧪 紫 (気+2)';
-        slotBtn.title = `${getPotionName(potion)}: クリックして使用します`;
+        const isSelected = state.player.selectedPotionIndex === i;
+        slotBtn.className = `potion-btn${isSelected ? ' selected' : ''}`;
+        if (potion === 'potion_hp') slotBtn.innerText = isSelected ? '🧪 使用する？' : '🧪 赤 (HP+12)';
+        else if (potion === 'potion_shield') slotBtn.innerText = isSelected ? '🧪 使用する？' : '🧪 青 (防+15)';
+        else if (potion === 'potion_energy') slotBtn.innerText = isSelected ? '🧪 使用する？' : '🧪 紫 (気+2)';
+        slotBtn.title = `${getPotionName(potion)}: ${getPotionDesc(potion)}`;
       } else {
         slotBtn.className = 'potion-btn empty';
         slotBtn.innerText = '🧪 空';
