@@ -2046,466 +2046,393 @@ body::after {
    MOBILE & TABLET RESPONSIVE MEDIA QUERIES
    ========================================== */
 
-@media (max-width: 768px) {
-  /* Prevent any vertical/horizontal scrolling on mobile screens */
+
+/* Orientation warning styles - hidden by default */
+#orientation-warning {
+  display: none;
+}
+
+/* Portrait orientation detected on mobile screens */
+@media (max-width: 900px) and (orientation: portrait) {
+  #orientation-warning {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: radial-gradient(circle at center, #1e1b4b, #09090b);
+    z-index: 99999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    padding: 30px;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+  }
+  
+  .warning-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 280px;
+  }
+  
+  .warning-icon {
+    font-size: 3.5rem;
+    animation: rotatePhone 2.5s infinite ease-in-out;
+  }
+  
+  #orientation-warning h2 {
+    font-size: 1.3rem;
+    color: var(--color-yellow);
+    text-shadow: var(--shadow-neon-yellow);
+    margin: 0;
+    font-weight: 800;
+  }
+  
+  #orientation-warning p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  #app {
+    display: none !important;
+  }
+}
+
+@keyframes rotatePhone {
+  0% { transform: rotate(0deg); }
+  35% { transform: rotate(-90deg); }
+  70% { transform: rotate(-90deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
+@media (max-height: 520px) and (orientation: landscape) {
   html, body, #app {
     height: 100vh !important;
-    max-height: 100vh !important;
+    height: 100dvh !important;
     overflow: hidden !important;
     position: fixed !important;
     width: 100% !important;
-    top: 0;
-    left: 0;
   }
   
   .screen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100% !important;
     height: 100% !important;
-    max-height: 100vh !important;
+    max-height: 100dvh !important;
     padding: 4px !important;
     overflow: hidden !important;
     display: none;
     flex-direction: column;
     justify-content: space-between;
   }
-  
+
   .screen.active {
     display: flex !important;
   }
-  
-  /* Global HUD adjustments */
+
+  /* Global HUD for compact horizontal view */
   .game-header {
     flex-direction: row !important;
-    gap: 4px;
-    padding: 2px 4px !important;
-    border-radius: 6px;
-    margin-bottom: 2px !important;
+    padding: 3px 8px !important;
+    margin-bottom: 3px !important;
     font-size: 0.72rem !important;
+    border-radius: 6px;
+    height: 32px !important;
+    align-items: center !important;
   }
-  
+
   .hud-group {
     width: auto !important;
     gap: 8px !important;
   }
-  
+
   .hud-item {
     font-size: 0.72rem !important;
-    gap: 3px !important;
   }
-  
+
   .hud-hp-bar {
-    display: none !important; /* スマホ縦画面ではヘッダーの赤いHPバー自体も消して幅を節約 */
-  }
-  
-  .hud-value {
-    font-size: 0.72rem !important;
+    width: 50px !important;
+    height: 6px !important;
   }
 
   .hud-potion-container {
-    gap: 2px !important;
-    margin-right: 0 !important;
+    gap: 3px !important;
   }
 
   .potion-btn {
-    padding: 2px 4px !important;
+    padding: 2px 5px !important;
     font-size: 0.65rem !important;
-    transition: all 0.2s;
-  }
-
-  .potion-btn.selected {
-    border-color: var(--color-yellow) !important;
-    box-shadow: 0 0 10px var(--color-yellow) !important;
-    background: rgba(255, 214, 0, 0.25) !important;
-    animation: selectedBlink 1.2s infinite !important;
-  }
-
-  @keyframes selectedBlink {
-    0%, 100% { opacity: 1; border-color: var(--color-yellow); }
-    50% { opacity: 0.5; border-color: #fff; }
   }
 
   .game-header .action-btn {
-    padding: 2px 4px !important;
+    padding: 2px 6px !important;
     font-size: 0.68rem !important;
   }
-  
-  /* Character Select Screen Mobile Layout */
-  .char-select-container {
-    flex-direction: column !important;
-    gap: 8px !important;
-    overflow-y: auto !important;
-    height: 82vh !important;
-    padding: 5px 0;
-  }
-  
-  .char-card {
-    width: 100% !important;
-    min-height: auto !important;
-    padding: 8px !important;
-  }
-  
-  /* Neow Screen Mobile Layout - Ultra compact row fitting 1 screen */
-  .neow-container {
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-around !important;
-    padding: 5px !important;
-  }
 
-  .neow-title {
-    margin-bottom: 5px !important;
-  }
-
-  .neow-title h2 {
-    font-size: 1.2rem !important;
-  }
-
-  .neow-title p {
-    font-size: 0.75rem !important;
-  }
-
-  .neow-choices {
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    gap: 4px !important;
-  }
-
-  .neow-card {
-    width: 32% !important;
-    padding: 6px 2px !important;
-    min-height: auto !important;
-    font-size: 0.65rem !important;
-    border-radius: 6px !important;
-  }
-
-  .neow-icon {
-    font-size: 1.1rem !important;
-  }
-
-  .neow-name {
-    font-size: 0.72rem !important;
-    margin: 2px 0 !important;
-    line-height: 1.1 !important;
-  }
-
-  .neow-desc {
-    font-size: 0.58rem !important;
-    line-height: 1.15 !important;
-  }
-
-  /* Map Screen Mobile Layout - Ultra Compact Node Grid (Fits Boss to Start) */
+  /* Map Screen Landscape layout - compact nodes */
   .map-container {
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    padding: 4px !important;
   }
 
   .map-title h2 {
-    font-size: 1.15rem !important;
+    font-size: 1.1rem !important;
     margin-bottom: 2px !important;
   }
+
   .map-title p {
     font-size: 0.65rem !important;
   }
 
   .map-grid {
     padding: 4px !important;
-    margin: 0 auto !important;
-    height: 58vh !important; /* Heavily compressed vertical height to fit everything */
-    width: 100% !important;
-    max-width: 480px !important;
+    height: 65vh !important;
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important; /* Horizontal flow for map on landscape! */
     justify-content: space-around !important;
+    align-items: center !important;
+    width: 96% !important;
+    margin: 0 auto !important;
   }
 
   .map-floor {
+    flex-direction: column !important;
     padding: 0 !important;
-    height: 38px !important; /* Compact floor line */
+    height: 100% !important;
+    width: auto !important;
     display: flex !important;
-    align-items: center !important;
     justify-content: center !important;
+    position: relative !important;
   }
 
   .map-floor:not(:last-child)::after {
-    bottom: -5px !important; /* Shorten dots spacing */
-    height: 10px !important;
+    left: auto !important;
+    right: -25px !important; /* Horizontal dashed link line */
+    bottom: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 20px !important;
+    height: 1px !important;
+    border-top: 1px dashed rgba(255,255,255,0.3) !important;
+    border-left: none !important;
   }
 
   .map-node {
-    width: 28px !important;
-    height: 28px !important;
-    font-size: 1rem !important;
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
   }
 
   .node-label {
-    bottom: -11px !important;
-    font-size: 0.55rem !important;
-  }
-  
-  /* Battle Arena Layout - ULTRALIGHT HORIZONTAL 1-ROW FLOW (100% No-hiding) */
-  .combatants-container {
-    flex-direction: row !important; /* Turn the whole battlefield into 1 single horizontal row! */
-    height: 65px !important; /* ONLY 65px height total! */
-    min-height: 65px !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 0 4px !important;
-    gap: 4px !important;
-    margin-bottom: 2px !important;
-    position: relative !important;
+    bottom: -15px !important;
+    font-size: 0.58rem !important;
   }
 
-  /* Player display on Left */
-  .combatants-container > .combatant-panel {
-    flex: 0 0 30% !important;
-    width: 30% !important;
-    max-width: 30% !important;
-    flex-direction: column !important; /* Stack name, avatar, hp vertically */
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 1px !important;
-    padding: 2px !important;
-    background: rgba(0, 0, 0, 0.4) !important;
-    border-radius: 6px !important;
-    height: 62px !important;
-    border: 1px solid rgba(0, 230, 118, 0.25) !important;
-  }
-
-  /* Enemies Zone (supports multiple: front/back) on Right */
-  #enemies-container {
-    flex: 0 0 58% !important;
-    width: 58% !important;
-    max-width: 58% !important;
-    display: flex !important;
-    flex-direction: row !important; /* Slide-by-side enemies */
-    justify-content: space-around !important;
-    gap: 4px !important;
-    align-items: center !important;
-    height: 62px !important;
-  }
-  
-  #enemies-container .combatant-panel {
-    width: 48% !important;
-    flex: 1 !important;
-    padding: 2px !important;
-    gap: 1px !important;
-    background: rgba(0, 0, 0, 0.45) !important;
-    border-radius: 6px !important;
-    min-height: auto !important;
-    height: 62px !important; /* Keep exact same height as player */
+  /* Combat Arena Layout - Super Compact Landscape view */
+  .battle-layout {
     display: flex !important;
     flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+    justify-content: space-between !important;
+    height: 100% !important;
   }
 
-  /* Avatars (Emojis) - shrink to fit 1 row */
-  .combatant-avatar-box {
-    width: 26px !important;
-    height: 26px !important;
-    font-size: 1.1rem !important;
-    display: flex !important;
+  .combatants-container {
+    flex-direction: row !important;
+    height: 110px !important; /* Fixed compact height */
+    min-height: 110px !important;
+    padding: 0 10px !important;
+    justify-content: space-around !important;
     align-items: center !important;
-    justify-content: center !important;
+    gap: 15px !important;
+  }
+
+  .combatant-panel {
+    width: 32% !important;
+    max-width: 200px !important;
+    flex-direction: row !important; /* Left to right layout to save height */
+    gap: 6px !important;
+    padding: 4px !important;
+    height: 75px !important;
+    background: rgba(0, 0, 0, 0.45) !important;
+    border-radius: 8px !important;
+  }
+
+  #enemies-container {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: auto !important;
+  }
+
+  #enemies-container .combatant-panel {
+    width: 140px !important;
+  }
+
+  .combatant-avatar-box {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.3rem !important;
   }
 
   .combatant-avatar-box::after {
-    font-size: 0.75rem !important;
-    top: -3px !important;
-    right: -3px !important;
+    font-size: 0.9rem !important;
   }
 
   .combatant-name {
-    font-size: 0.58rem !important;
-    line-height: 1 !important;
+    font-size: 0.68rem !important;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-    text-align: center;
   }
 
-  /* HP - Hide bar on mobile portrait, only show text val to save vertical spaces */
   .hp-numeric {
-    font-size: 0.58rem !important;
-    line-height: 1 !important;
-  }
-
-  .hp-bar-outer {
-    display: none !important; /* Hide bars to save space! */
-  }
-
-  .shield-badge {
-    font-size: 0.55rem !important;
-    padding: 0px 2px !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-  }
-
-  /* Debuff status icon lists */
-  .buff-debuff-list {
-    margin-top: 1px !important;
-    gap: 1px !important;
-    position: absolute;
-    bottom: -15px; /* Float below the row to save height */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    white-space: nowrap;
-  }
-
-  .status-effect {
-    font-size: 0.5rem !important;
-    padding: 0px 2px !important;
-  }
-
-  /* Intent Bubbles over enemy avatars */
-  .intent-bubble {
-    padding: 1px 3px !important;
-    font-size: 0.55rem !important;
-    margin-bottom: 0 !important;
-    position: absolute !important;
-    top: -2px !important;
-    right: -2px !important;
-    z-index: 20;
-    border-radius: 4px !important;
-    background: rgba(15, 23, 42, 0.95) !important;
-  }
-
-  .intent-icon {
     font-size: 0.65rem !important;
   }
 
-  /* Timer Zone: Absolute float in the dead center */
+  .hp-bar-outer {
+    height: 4px !important;
+    width: 60px !important;
+  }
+
+  .shield-badge {
+    font-size: 0.62rem !important;
+    padding: 1px 3px !important;
+  }
+
+  .buff-debuff-list {
+    margin-top: 2px !important;
+    gap: 2px !important;
+  }
+
+  .status-effect {
+    font-size: 0.6rem !important;
+    padding: 1px 3px !important;
+  }
+
+  .intent-bubble {
+    padding: 2px 4px !important;
+    font-size: 0.6rem !important;
+    top: -5px !important;
+    right: -5px !important;
+  }
+
+  .intent-icon {
+    font-size: 0.72rem !important;
+  }
+
   .timer-container {
-    flex: 0 0 10% !important;
-    width: 10% !important;
-    position: relative !important;
+    margin: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important;
-    margin: 0 !important;
   }
 
   .round-timer {
-    width: 26px !important;
-    height: 26px !important;
-    font-size: 0.8rem !important;
-    border-width: 1px !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1rem !important;
   }
 
   .timer-label {
-    display: none !important; /* Hide text label */
+    display: none !important;
   }
 
   /* Compact Built Sentence display */
   #constructing-sentence-banner {
-    padding: 1px !important;
+    padding: 2px !important;
     margin: 1px 0 !important;
-    min-height: 24px !important;
+    min-height: 28px !important;
   }
 
   #constructing-sentence-banner .english {
-    font-size: 0.78rem !important;
+    font-size: 0.85rem !important;
   }
 
   #constructing-sentence-banner .japanese {
-    font-size: 0.62rem !important;
+    font-size: 0.68rem !important;
   }
 
-  #completed-sentence-text {
-    font-size: 0.9rem !important;
-  }
-  
-  /* Player Action / Hand Zone - Hyper Slim Horizontal scroll */
+  /* Player Action / Hand Zone - Super compact row */
   .player-interaction-zone {
-    height: 95px !important; /* Only 95px height! Guaranteed fit. */
-    max-height: 95px !important;
+    height: 110px !important; /* Exact height for landscape screen fit */
+    max-height: 110px !important;
     margin-top: 0 !important;
-    padding: 2px 4px !important;
+    padding: 2px 8px !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 4px !important;
+    gap: 10px !important;
     position: relative !important;
   }
-  
+
   .energy-orb-container {
-    flex: 0 0 36px !important;
+    flex: 0 0 45px !important;
     gap: 1px !important;
   }
 
   .energy-orb {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 0.85rem !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1rem !important;
   }
 
   .energy-label {
-    font-size: 0.55rem !important;
+    font-size: 0.52rem !important;
   }
-  
-  /* Hand Container: Back to Horizontal slide but extremely flat */
+
   #battle-hand {
     display: flex !important;
-    flex-wrap: nowrap !important; /* horizontal slide */
-    justify-content: flex-start !important;
-    align-items: center !important;
-    overflow-x: auto !important; /* enable horizontal scroll */
-    overflow-y: hidden !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-behavior: smooth;
     padding: 2px 0 !important;
-    gap: 4px !important;
-    height: 90px !important;
+    gap: 6px !important;
+    height: 100px !important;
     flex: 1 !important;
-    margin: 0 2px !important;
+    margin: 0 4px !important;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   #battle-hand .game-card {
-    flex: 0 0 58px !important; /* Flat card width */
-    width: 58px !important;
-    height: 80px !important; /* Flat card height */
-    padding: 2px !important;
-    border-radius: 4px !important;
-    margin: 0 !important;
+    flex: 0 0 74px !important;
+    width: 74px !important;
+    height: 96px !important;
+    padding: 3px !important;
+    border-radius: 6px !important;
   }
-  
+
   #battle-hand .game-card .card-title {
-    font-size: 0.58rem !important;
-    margin: 1px 0 !important;
-    line-height: 1 !important;
+    font-size: 0.65rem !important;
+    margin: 2px 0 !important;
+    line-height: 1.1 !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  
+
   #battle-hand .game-card .card-translation {
-    display: none !important; /* Hide translation in hand to fit */
+    display: none !important; /* Hide to fit card size */
   }
-  
+
   #battle-hand .game-card .card-cost {
-    width: 12px !important;
-    height: 12px !important;
-    font-size: 0.55rem !important;
+    width: 14px !important;
+    height: 14px !important;
+    font-size: 0.62rem !important;
   }
-  
+
   #battle-hand .game-card .card-type-tag {
-    font-size: 0.5rem !important;
+    font-size: 0.52rem !important;
   }
-  
-  /* Hide heavy details on hand cards (modal details show them) */
+
   #battle-hand .game-card .card-body, 
   #battle-hand .game-card .card-next-hint, 
   #battle-hand .game-card .card-mod-badge,
@@ -2513,296 +2440,123 @@ body::after {
     display: none !important;
   }
 
-  /* Large detail card override inside Card Preview Modal */
-  .preview-card-large {
-    width: 175px !important;
-    height: 245px !important;
-    padding: 12px 8px !important;
-    border-radius: 12px !important;
-  }
-
-  .preview-card-large .card-title {
-    font-size: 1.1rem !important;
-    margin: 6px 0 !important;
-  }
-
-  .preview-card-large .card-translation {
-    font-size: 0.85rem !important;
-    display: block !important;
-  }
-
-  .preview-card-large .card-body {
-    display: block !important; /* Force show description on modal selection */
-    font-size: 0.72rem !important;
-    line-height: 1.3 !important;
-    margin-top: 10px !important;
-  }
-
-  /* Relocate Draw / Discard pile badges as absolute float badges on top of Hand Zone */
+  /* Relocate Draw / Discard float badges */
   .deck-pile-badge {
     position: absolute !important;
-    bottom: 88px !important; /* Adjusted for super flat hand zone */
+    bottom: 104px !important;
     background: rgba(15, 23, 42, 0.85) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 4px !important;
-    padding: 2px 4px !important;
+    padding: 2px 6px !important;
     display: flex !important;
     flex-direction: row !important;
-    gap: 2px !important;
+    gap: 4px !important;
     align-items: center !important;
     z-index: 100 !important;
     width: auto !important;
     height: auto !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
   }
-  
+
   .deck-pile-badge.draw-pile {
     left: 10px !important;
   }
-  
+
   .deck-pile-badge.discard-pile {
     right: 10px !important;
   }
-  
+
   .deck-pile-badge span {
-    font-size: 0.75rem !important;
+    font-size: 0.8rem !important;
   }
-  
+
   .deck-pile-badge div {
-    font-size: 0.65rem !important;
+    font-size: 0.7rem !important;
     margin: 0 !important;
     display: inline !important;
   }
-  
+
   .deck-pile-badge div:last-child {
-    display: none !important; /* Hide label */
+    display: none !important;
   }
 
-  /* Compact End Turn button & Disable Log */
+  /* Compact End Turn button & Disable Log on Landscape */
   .player-interaction-zone > div:last-child {
-    flex: 0 0 65px !important;
+    flex: 0 0 74px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 2px !important;
     margin: 0 !important;
-    width: 65px !important;
+    width: 74px !important;
   }
 
   #end-turn-btn {
     width: 100% !important;
     height: 38px !important;
     padding: 0 2px !important;
-    font-size: 0.7rem !important;
+    font-size: 0.72rem !important;
     border-radius: 4px !important;
-    white-space: normal !important;
-    line-height: 1.1 !important;
   }
 
   .combat-log-container {
     display: none !important;
   }
-  
+
+  /* Large detail card override inside Card Preview Modal */
+  .preview-card-large {
+    width: 160px !important;
+    height: 220px !important;
+    padding: 10px 6px !important;
+  }
+
+  .preview-card-large .card-title {
+    font-size: 1rem !important;
+    margin: 4px 0 !important;
+  }
+
+  .preview-card-large .card-translation {
+    font-size: 0.8rem !important;
+    display: block !important;
+  }
+
+  .preview-card-large .card-body {
+    display: block !important;
+    font-size: 0.68rem !important;
+    line-height: 1.25 !important;
+    margin-top: 6px !important;
+  }
+
   /* B Choices & Overlay Grid: 2 Columns Side-by-Side */
   .choice-overlay {
     width: 96% !important;
-    padding: 10px !important;
-    max-height: 85vh;
+    padding: 8px !important;
+    max-height: 92vh !important;
   }
 
   #overlay-title-text {
-    font-size: 0.95rem !important;
-    margin-bottom: 8px !important;
-  }
-  
-  .choice-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
-  }
-  
-  .choice-btn {
-    padding: 6px !important;
-    min-height: 58px !important;
-    border-radius: 8px !important;
-    gap: 2px !important;
-  }
-  
-  .choice-btn .choice-text {
-    font-size: 0.88rem !important;
-  }
-
-  .choice-btn .choice-desc {
-    font-size: 0.65rem !important;
-  }
-  
-  /* Deck and Dict Overlay Grid */
-  .deck-overlay-content, .dict-overlay-content {
-    width: 96% !important;
-    max-height: 88vh !important;
-    padding: 10px !important;
-  }
-
-  #deck-overlay-grid, #dict-overlay-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
-  }
-  
-  /* Shop screen Mobile Layout */
-  .rest-layout, .shop-layout {
-    height: auto !important;
-    padding: 8px !important;
-  }
-  
-  .rest-options {
-    flex-direction: column !important;
-    gap: 8px !important;
-  }
-  
-  .shop-grid {
-    grid-template-columns: 1fr !important;
-    gap: 15px !important;
-  }
-  
-  .shop-shelf {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-  
-  /* General Modal Tuning */
-  .modal-content {
-    width: 96% !important;
-    padding: 12px !important;
-  }
-  
-  #small-talk-container {
-    margin-bottom: 2px !important;
-  }
-  
-  #small-talk-btn {
-    padding: 4px 12px !important;
-    font-size: 0.72rem !important;
-  }
-}
-
-/* ==========================================================
-   LANDSCAPE (HORIZONTAL) PHONE RESPONSIVE MEDIA QUERIES
-   ========================================================== */
-@media (max-height: 520px) and (orientation: landscape) {
-  body {
-    overflow-y: auto !important;
-    height: auto !important;
-  }
-  
-  .screen {
-    height: auto !important;
-    min-height: 100vh !important;
-    overflow-y: auto !important;
-  }
-
-  .game-header {
-    flex-direction: row !important;
-    padding: 5px 10px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .hud-group {
-    width: auto !important;
-    gap: 12px !important;
-  }
-
-  /* Compact Battle Layout for Horizontal view */
-  .battle-layout {
-    justify-content: flex-start !important;
-    gap: 10px;
-  }
-
-  .combatants-container {
-    flex-direction: row !important;
-    height: auto !important;
-    min-height: 130px !important;
-    padding: 0 15px !important;
-    justify-content: space-around !important;
-  }
-
-  .combatant-panel {
-    width: 44% !important;
-    flex-direction: row !important;
-    gap: 10px !important;
-    padding: 6px !important;
-  }
-
-  .combatant-avatar-box {
-    width: 50px !important;
-    height: 50px !important;
-    font-size: 1.8rem !important;
-  }
-
-  .timer-container {
-    margin: 0 !important;
-  }
-
-  .round-timer {
-    width: 45px !important;
-    height: 45px !important;
-    font-size: 1.3rem !important;
-  }
-
-  /* Compact Hand Zone for Landscape */
-  .player-interaction-zone {
-    height: auto !important;
-    margin-top: 5px !important;
-    padding: 5px 15px !important;
-    flex-direction: row !important;
-    gap: 15px !important;
-    align-items: center !important;
-  }
-
-  .energy-orb {
-    width: 48px !important;
-    height: 48px !important;
-    font-size: 1.3rem !important;
-  }
-
-  #battle-hand {
-    height: 145px !important;
-  }
-
-  .game-card {
-    flex: 0 0 115px !important;
-    height: 125px !important;
-    padding: 6px !important;
-  }
-
-  .game-card .card-title {
-    font-size: 0.72rem !important;
-  }
-
-  .game-card .card-body, .game-card .card-translation, .game-card .card-next-hint {
-    display: none !important; /* Hide details in micro horizontal cards */
-  }
-
-  /* Overlay choices grid (B choices) on landscape */
-  .choice-overlay {
-    max-height: 95vh !important;
-    padding: 10px !important;
-  }
-
-  .choice-grid {
-    grid-template-columns: repeat(2, 1fr) !important; /* Side by side on wide horizontal screen */
-    gap: 8px !important;
-  }
-
-  .choice-btn {
-    min-height: 55px !important;
-    padding: 6px !important;
-  }
-
-  .choice-btn .choice-text {
     font-size: 0.85rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .choice-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .choice-btn {
+    padding: 4px !important;
+    min-height: 48px !important;
+    border-radius: 6px !important;
+  }
+
+  .choice-btn .choice-text {
+    font-size: 0.8rem !important;
   }
 
   .choice-btn .choice-desc {
-    font-size: 0.7rem !important;
+    font-size: 0.6rem !important;
   }
 }
+
+
 
 
 
