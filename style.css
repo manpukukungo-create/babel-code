@@ -2065,7 +2065,7 @@ body::after {
     width: 100% !important;
     height: 100% !important;
     max-height: 100vh !important;
-    padding: 6px !important;
+    padding: 4px !important;
     overflow: hidden !important;
     display: none;
     flex-direction: column;
@@ -2080,10 +2080,10 @@ body::after {
   .game-header {
     flex-direction: row !important;
     gap: 4px;
-    padding: 4px 8px !important;
-    border-radius: 8px;
-    margin-bottom: 4px !important;
-    font-size: 0.8rem !important;
+    padding: 2px 4px !important;
+    border-radius: 6px;
+    margin-bottom: 2px !important;
+    font-size: 0.72rem !important;
   }
   
   .hud-group {
@@ -2092,27 +2092,26 @@ body::after {
   }
   
   .hud-item {
-    font-size: 0.8rem !important;
+    font-size: 0.72rem !important;
     gap: 3px !important;
   }
   
   .hud-hp-bar {
-    width: 60px !important;
-    height: 8px !important;
+    display: none !important; /* スマホ縦画面ではヘッダーの赤いHPバー自体も消して幅を節約 */
   }
   
   .hud-value {
-    font-size: 0.8rem !important;
+    font-size: 0.72rem !important;
   }
 
   .hud-potion-container {
-    gap: 3px !important;
-    margin-right: 2px !important;
+    gap: 2px !important;
+    margin-right: 0 !important;
   }
 
   .potion-btn {
-    padding: 3px 6px !important;
-    font-size: 0.7rem !important;
+    padding: 2px 4px !important;
+    font-size: 0.65rem !important;
     transition: all 0.2s;
   }
 
@@ -2129,9 +2128,8 @@ body::after {
   }
 
   .game-header .action-btn {
-    padding: 4px 8px !important;
-    font-size: 0.75rem !important;
-    margin-right: 2px !important;
+    padding: 2px 4px !important;
+    font-size: 0.68rem !important;
   }
   
   /* Character Select Screen Mobile Layout */
@@ -2229,236 +2227,289 @@ body::after {
 
   .map-floor {
     padding: 0 !important;
-    height: 40px !important; /* Compact floor line */
+    height: 38px !important; /* Compact floor line */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
   .map-floor:not(:last-child)::after {
-    bottom: -6px !important; /* Shorten dots spacing */
-    height: 12px !important;
+    bottom: -5px !important; /* Shorten dots spacing */
+    height: 10px !important;
   }
 
   .map-node {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 1.1rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 1rem !important;
   }
 
   .node-label {
-    bottom: -13px !important;
-    font-size: 0.58rem !important;
+    bottom: -11px !important;
+    font-size: 0.55rem !important;
   }
   
-  /* Battle Arena Layout - Fit everything on one screen (no scroll) */
+  /* Battle Arena Layout - ULTRALIGHT HORIZONTAL 1-ROW FLOW (100% No-hiding) */
   .combatants-container {
-    flex-direction: column-reverse !important; /* Stack: Enemies top, Player bottom */
-    height: 30vh !important; /* Compress battle arena height */
-    min-height: auto !important;
+    flex-direction: row !important; /* Turn the whole battlefield into 1 single horizontal row! */
+    height: 65px !important; /* ONLY 65px height total! */
+    min-height: 65px !important;
     justify-content: space-between !important;
-    padding: 0 5px !important;
+    align-items: center !important;
+    padding: 0 4px !important;
     gap: 4px !important;
     margin-bottom: 2px !important;
+    position: relative !important;
   }
 
-  /* Two enemies horizontally, player vertically below them */
+  /* Player display on Left */
+  .combatants-container > .combatant-panel {
+    flex: 0 0 30% !important;
+    width: 30% !important;
+    max-width: 30% !important;
+    flex-direction: column !important; /* Stack name, avatar, hp vertically */
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 1px !important;
+    padding: 2px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-radius: 6px !important;
+    height: 62px !important;
+    border: 1px solid rgba(0, 230, 118, 0.25) !important;
+  }
+
+  /* Enemies Zone (supports multiple: front/back) on Right */
   #enemies-container {
+    flex: 0 0 58% !important;
+    width: 58% !important;
+    max-width: 58% !important;
     display: flex !important;
-    flex-direction: row !important;
-    width: 100% !important;
+    flex-direction: row !important; /* Slide-by-side enemies */
     justify-content: space-around !important;
-    gap: 6px !important;
-    max-height: 90px !important;
+    gap: 4px !important;
+    align-items: center !important;
+    height: 62px !important;
   }
   
-  .combatant-panel {
+  #enemies-container .combatant-panel {
     width: 48% !important;
-    padding: 4px !important;
-    gap: 2px !important;
+    flex: 1 !important;
+    padding: 2px !important;
+    gap: 1px !important;
     background: rgba(0, 0, 0, 0.45) !important;
     border-radius: 6px !important;
     min-height: auto !important;
-    height: 85px !important; /* Strict limit to show avatars */
+    height: 62px !important; /* Keep exact same height as player */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
   }
 
-  /* Player panel - horizontal flow to save height */
-  .combatants-container > .combatant-panel {
-    width: 82% !important;
-    margin: 0 auto !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    gap: 12px !important;
-    padding: 4px !important;
-    background: rgba(0, 0, 0, 0.4) !important;
-    border-radius: 6px !important;
-    height: 48px !important; /* Strict height limit */
-  }
-  
+  /* Avatars (Emojis) - shrink to fit 1 row */
   .combatant-avatar-box {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 1.4rem !important;
-    display: block !important; /* Ensure enemy avatars show */
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 1.1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .combatant-avatar-box::after {
-    font-size: 0.95rem !important;
-    top: -4px !important;
-    right: -4px !important;
+    font-size: 0.75rem !important;
+    top: -3px !important;
+    right: -3px !important;
   }
 
   .combatant-name {
-    font-size: 0.72rem !important;
+    font-size: 0.58rem !important;
+    line-height: 1 !important;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: center;
   }
 
+  /* HP - Hide bar on mobile portrait, only show text val to save vertical spaces */
   .hp-numeric {
-    font-size: 0.68rem !important;
+    font-size: 0.58rem !important;
+    line-height: 1 !important;
   }
 
   .hp-bar-outer {
-    height: 4px !important;
+    display: none !important; /* Hide bars to save space! */
   }
 
   .shield-badge {
-    font-size: 0.65rem !important;
-    padding: 1px 3px !important;
+    font-size: 0.55rem !important;
+    padding: 0px 2px !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
   }
 
+  /* Debuff status icon lists */
   .buff-debuff-list {
-    margin-top: 2px !important;
-    gap: 2px !important;
+    margin-top: 1px !important;
+    gap: 1px !important;
+    position: absolute;
+    bottom: -15px; /* Float below the row to save height */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    white-space: nowrap;
   }
 
   .status-effect {
-    font-size: 0.62rem !important;
-    padding: 1px 3px !important;
+    font-size: 0.5rem !important;
+    padding: 0px 2px !important;
   }
 
+  /* Intent Bubbles over enemy avatars */
   .intent-bubble {
-    padding: 1px 4px !important;
-    font-size: 0.65rem !important;
-    margin-bottom: 1px !important;
+    padding: 1px 3px !important;
+    font-size: 0.55rem !important;
+    margin-bottom: 0 !important;
+    position: absolute !important;
+    top: -2px !important;
+    right: -2px !important;
+    z-index: 20;
+    border-radius: 4px !important;
+    background: rgba(15, 23, 42, 0.95) !important;
   }
 
   .intent-icon {
-    font-size: 0.78rem !important;
+    font-size: 0.65rem !important;
   }
 
-  /* Timer positioning on Player row */
+  /* Timer Zone: Absolute float in the dead center */
   .timer-container {
-    position: absolute !important;
-    right: 15px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
+    flex: 0 0 10% !important;
+    width: 10% !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     margin: 0 !important;
-    z-index: 5;
   }
 
   .round-timer {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 1.05rem !important;
-    border-width: 1.5px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.8rem !important;
+    border-width: 1px !important;
+  }
+
+  .timer-label {
+    display: none !important; /* Hide text label */
   }
 
   /* Compact Built Sentence display */
   #constructing-sentence-banner {
-    padding: 2px !important;
-    margin: 2px 0 !important;
+    padding: 1px !important;
+    margin: 1px 0 !important;
+    min-height: 24px !important;
   }
 
   #constructing-sentence-banner .english {
-    font-size: 0.9rem !important;
+    font-size: 0.78rem !important;
   }
 
   #constructing-sentence-banner .japanese {
-    font-size: 0.7rem !important;
+    font-size: 0.62rem !important;
   }
 
   #completed-sentence-text {
-    font-size: 1rem !important;
+    font-size: 0.9rem !important;
   }
   
-  /* Player Action / Hand Zone - Expanded for 2-row Wrap Grid */
+  /* Player Action / Hand Zone - Hyper Slim Horizontal scroll */
   .player-interaction-zone {
-    height: 205px !important; /* Expand to support 2-row wrapped hand grid */
-    max-height: 205px !important;
+    height: 95px !important; /* Only 95px height! Guaranteed fit. */
+    max-height: 95px !important;
     margin-top: 0 !important;
-    padding: 4px 6px !important;
+    padding: 2px 4px !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 6px !important;
+    gap: 4px !important;
     position: relative !important;
   }
   
   .energy-orb-container {
-    flex: 0 0 46px !important;
+    flex: 0 0 36px !important;
     gap: 1px !important;
   }
 
   .energy-orb {
-    width: 40px !important;
-    height: 40px !important;
-    font-size: 1rem !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.85rem !important;
   }
 
   .energy-label {
     font-size: 0.55rem !important;
   }
   
-  /* Grid configuration: 2 Rows Wrap (e.g. 3 cards top, 2 cards bottom) */
+  /* Hand Container: Back to Horizontal slide but extremely flat */
   #battle-hand {
     display: flex !important;
-    flex-wrap: wrap !important; /* Wrap cards dynamically */
-    justify-content: center !important;
+    flex-wrap: nowrap !important; /* horizontal slide */
+    justify-content: flex-start !important;
     align-items: center !important;
-    overflow-x: hidden !important; /* No horizontal scroll */
-    overflow-y: visible !important;
-    padding: 2px !important;
-    gap: 6px !important;
-    height: auto !important;
+    overflow-x: auto !important; /* enable horizontal scroll */
+    overflow-y: hidden !important;
+    padding: 2px 0 !important;
+    gap: 4px !important;
+    height: 90px !important;
     flex: 1 !important;
-    margin: 0 !important;
+    margin: 0 2px !important;
+    -webkit-overflow-scrolling: touch;
   }
   
   #battle-hand .game-card {
-    flex: 0 0 74px !important; /* Micro card sizing for 2-column/row grid alignment */
-    width: 74px !important;
-    height: 96px !important;
-    padding: 3px !important;
-    border-radius: 5px !important;
+    flex: 0 0 58px !important; /* Flat card width */
+    width: 58px !important;
+    height: 80px !important; /* Flat card height */
+    padding: 2px !important;
+    border-radius: 4px !important;
     margin: 0 !important;
   }
   
   #battle-hand .game-card .card-title {
-    font-size: 0.62rem !important;
+    font-size: 0.58rem !important;
     margin: 1px 0 !important;
-    line-height: 1.1 !important;
+    line-height: 1 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   #battle-hand .game-card .card-translation {
-    font-size: 0.52rem !important;
-    margin-top: 1px !important;
+    display: none !important; /* Hide translation in hand to fit */
   }
   
   #battle-hand .game-card .card-cost {
-    width: 14px !important;
-    height: 14px !important;
-    font-size: 0.6rem !important;
+    width: 12px !important;
+    height: 12px !important;
+    font-size: 0.55rem !important;
   }
   
   #battle-hand .game-card .card-type-tag {
-    font-size: 0.52rem !important;
+    font-size: 0.5rem !important;
   }
   
-  /* Hide heavy description texts on hand cards (modal details show them) */
+  /* Hide heavy details on hand cards (modal details show them) */
   #battle-hand .game-card .card-body, 
   #battle-hand .game-card .card-next-hint, 
-  #battle-hand .game-card .card-mod-badge {
+  #battle-hand .game-card .card-mod-badge,
+  #battle-hand .game-card .card-pronounce {
     display: none !important;
   }
 
@@ -2490,14 +2541,14 @@ body::after {
   /* Relocate Draw / Discard pile badges as absolute float badges on top of Hand Zone */
   .deck-pile-badge {
     position: absolute !important;
-    bottom: 198px !important; /* Adjusted for taller hand zone */
+    bottom: 88px !important; /* Adjusted for super flat hand zone */
     background: rgba(15, 23, 42, 0.85) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 4px !important;
-    padding: 2px 6px !important;
+    padding: 2px 4px !important;
     display: flex !important;
     flex-direction: row !important;
-    gap: 4px !important;
+    gap: 2px !important;
     align-items: center !important;
     z-index: 100 !important;
     width: auto !important;
@@ -2514,11 +2565,11 @@ body::after {
   }
   
   .deck-pile-badge span {
-    font-size: 0.95rem !important;
+    font-size: 0.75rem !important;
   }
   
   .deck-pile-badge div {
-    font-size: 0.75rem !important;
+    font-size: 0.65rem !important;
     margin: 0 !important;
     display: inline !important;
   }
@@ -2529,20 +2580,20 @@ body::after {
 
   /* Compact End Turn button & Disable Log */
   .player-interaction-zone > div:last-child {
-    flex: 0 0 74px !important;
+    flex: 0 0 65px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 4px !important;
+    gap: 2px !important;
     margin: 0 !important;
-    width: 74px !important;
+    width: 65px !important;
   }
 
   #end-turn-btn {
     width: 100% !important;
-    height: 44px !important;
+    height: 38px !important;
     padding: 0 2px !important;
-    font-size: 0.75rem !important;
-    border-radius: 5px !important;
+    font-size: 0.7rem !important;
+    border-radius: 4px !important;
     white-space: normal !important;
     line-height: 1.1 !important;
   }
@@ -2622,12 +2673,12 @@ body::after {
   }
   
   #small-talk-container {
-    margin-bottom: 4px !important;
+    margin-bottom: 2px !important;
   }
   
   #small-talk-btn {
     padding: 4px 12px !important;
-    font-size: 0.8rem !important;
+    font-size: 0.72rem !important;
   }
 }
 
