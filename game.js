@@ -3199,6 +3199,7 @@ function render() {
     const deckEl = document.getElementById('defeat-deck');
     if (deckEl) deckEl.innerText = `${state.player.deck.length}枚`;
   }
+  adjustGameScale();
 }
 
 function renderHUD() {
@@ -3914,6 +3915,48 @@ window.chooseBossRelic = chooseBossRelic;
 window.selectTarget = selectTarget;
 window.executeSmallTalk = executeSmallTalk;
 
+// --- Auto scaling utility to maintain 16:9 aspect ratio ---
+function adjustGameScale() {
+  const app = document.getElementById('app');
+  if (!app) return;
+  
+  const isPortrait = window.innerHeight > window.innerWidth && window.innerWidth < 900;
+  if (isPortrait) {
+    app.style.transform = 'none';
+    app.style.position = 'relative';
+    app.style.left = 'auto';
+    app.style.top = 'auto';
+    app.style.marginLeft = '0px';
+    app.style.marginTop = '0px';
+    return;
+  }
+  
+  const baseWidth = 1280;
+  const baseHeight = 720;
+  
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  
+  const scaleX = windowWidth / baseWidth;
+  const scaleY = windowHeight / baseHeight;
+  const scale = Math.min(scaleX, scaleY);
+  
+  app.style.position = 'absolute';
+  app.style.width = `${baseWidth}px`;
+  app.style.height = `${baseHeight}px`;
+  app.style.transformOrigin = 'center center';
+  app.style.transform = `scale(${scale})`;
+  
+  app.style.left = '50%';
+  app.style.top = '50%';
+  app.style.marginLeft = `-${baseWidth / 2}px`;
+  app.style.marginTop = `-${baseHeight / 2}px`;
+}
+
+// Bind resize handler
+window.addEventListener('resize', adjustGameScale);
+window.adjustGameScale = adjustGameScale;
+
 // --- Initial Startup Bindings ---
 document.addEventListener('DOMContentLoaded', () => {
   const startBtn = document.getElementById('title-btn-start');
@@ -3922,6 +3965,7 @@ document.addEventListener('DOMContentLoaded', () => {
       initGame('default');
     });
   }
+  adjustGameScale();
   render();
 });
 
@@ -3932,5 +3976,6 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
       initGame('default');
     });
   }
+  adjustGameScale();
   render();
 }
