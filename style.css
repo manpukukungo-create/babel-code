@@ -83,6 +83,10 @@ body {
   overflow: hidden;
 }
 
+#battle-screen, #map-screen, #shop-screen, #rest-screen {
+  padding-top: 90px !important;
+}
+
 .screen.active {
   display: flex;
 }

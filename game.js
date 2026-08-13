@@ -3945,12 +3945,13 @@ function adjustGameScale() {
   app.style.width = `${baseWidth}px`;
   app.style.height = `${baseHeight}px`;
   app.style.transformOrigin = 'center center';
-  app.style.transform = `scale(${scale})`;
   
+  // Use translate(-50%, -50%) for perfect absolute center-scaling without pixel margin bugs
   app.style.left = '50%';
   app.style.top = '50%';
-  app.style.marginLeft = `-${baseWidth / 2}px`;
-  app.style.marginTop = `-${baseHeight / 2}px`;
+  app.style.marginLeft = '0px';
+  app.style.marginTop = '0px';
+  app.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
 
 // Bind resize handler
