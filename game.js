@@ -3199,7 +3199,7 @@ function render() {
     const deckEl = document.getElementById('defeat-deck');
     if (deckEl) deckEl.innerText = `${state.player.deck.length}枚`;
   }
-  adjustGameScale();
+  resizeGame();
 }
 
 function renderHUD() {
@@ -3916,18 +3916,16 @@ window.selectTarget = selectTarget;
 window.executeSmallTalk = executeSmallTalk;
 
 // --- Auto scaling utility to maintain 16:9 aspect ratio ---
-function adjustGameScale() {
-  const app = document.getElementById('app');
-  if (!app) return;
+function resizeGame() {
+  const game = document.getElementById('game-screen');
+  if (!game) return;
   
   const isPortrait = window.innerHeight > window.innerWidth && window.innerWidth < 900;
   if (isPortrait) {
-    app.style.transform = 'none';
-    app.style.position = 'relative';
-    app.style.left = 'auto';
-    app.style.top = 'auto';
-    app.style.marginLeft = '0px';
-    app.style.marginTop = '0px';
+    game.style.transform = 'none';
+    game.style.position = 'relative';
+    game.style.left = 'auto';
+    game.style.top = 'auto';
     return;
   }
   
@@ -3941,22 +3939,13 @@ function adjustGameScale() {
   const scaleY = windowHeight / baseHeight;
   const scale = Math.min(scaleX, scaleY);
   
-  app.style.position = 'absolute';
-  app.style.width = `${baseWidth}px`;
-  app.style.height = `${baseHeight}px`;
-  app.style.transformOrigin = 'center center';
-  
-  // Use translate(-50%, -50%) for perfect absolute center-scaling without pixel margin bugs
-  app.style.left = '50%';
-  app.style.top = '50%';
-  app.style.marginLeft = '0px';
-  app.style.marginTop = '0px';
-  app.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  game.style.transform = `scale(${scale})`;
+  game.style.transformOrigin = 'center center';
 }
 
 // Bind resize handler
-window.addEventListener('resize', adjustGameScale);
-window.adjustGameScale = adjustGameScale;
+window.addEventListener('resize', resizeGame);
+window.resizeGame = resizeGame;
 
 // --- Initial Startup Bindings ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -3966,7 +3955,7 @@ document.addEventListener('DOMContentLoaded', () => {
       initGame('default');
     });
   }
-  adjustGameScale();
+  resizeGame();
   render();
 });
 
@@ -3977,6 +3966,6 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
       initGame('default');
     });
   }
-  adjustGameScale();
+  resizeGame();
   render();
 }

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BABEL CODE - 英語ローグライクカードバトル</title>
-  <link rel="stylesheet" href="style.css?v=20260814_01">
+  <link rel="stylesheet" href="style.css?v=20260819_01">
 </head>
 <body>
   <!-- Orientation warning for vertical mobile screens -->
@@ -19,8 +19,10 @@
   <!-- Toast notification area -->
   <div id="toast-container" class="toast-container"></div>
 
-  <!-- Global App Container -->
-  <div id="app">
+  <!-- Global Game Wrapper -->
+  <div id="game-wrapper">
+    <!-- Game Screen (Fixed 1280x720 baseline container) -->
+    <div id="game-screen">
     
     <!-- Global HUD Header (Hidden on Title & Character Selection) -->
     <header id="global-header" class="game-header" style="display: none;">
@@ -565,8 +567,9 @@
       </div>
     </div>
 
+    </div>
   </div>
 
-  <script src="game.js?v=20260814_01"></script>
+  <script src="game.js?v=20260819_01"></script>
 </body>
 </html>
