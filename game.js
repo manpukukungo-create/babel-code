@@ -3939,7 +3939,11 @@ function resizeGame() {
   const scaleY = windowHeight / baseHeight;
   const scale = Math.min(scaleX, scaleY);
   
-  game.style.transform = `scale(${scale})`;
+  // Enforce center scaling via absolute translation so it fills maximum viewport space
+  game.style.position = 'absolute';
+  game.style.left = '50%';
+  game.style.top = '50%';
+  game.style.transform = `translate(-50%, -50%) scale(${scale})`;
   game.style.transformOrigin = 'center center';
 }
 

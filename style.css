@@ -90,7 +90,9 @@ body, html {
 }
 
 #battle-screen, #map-screen, #shop-screen, #rest-screen {
-  padding-top: 100px !important; /* Safe area header padding offset */
+  top: 90px !important;
+  height: calc(100% - 90px) !important;
+  padding-top: 10px !important; /* Reset padding to prevent downward overflow */
 }
 
 #title-screen, #neow-screen {
@@ -1871,16 +1873,16 @@ body, html {
 }
 
 .preview-card-large {
-  width: 250px !important;
-  height: 350px !important;
+  width: 210px !important;
+  height: 290px !important;
   pointer-events: none; /* Disable inner clicks */
   transform: none !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
 }
 
 .preview-card-large .card-title {
-  font-size: 1.55rem !important;
-  margin: 15px 0 !important;
+  font-size: 1.25rem !important;
+  margin: 8px 0 !important;
 }
 
 .preview-card-large .card-body {
