@@ -2080,7 +2080,33 @@ body::after {
    ========================================== */
 
 
-/* Orientation warning styles - hidden by default */
+
+/* Card Cost Absolute Badge on top-left */
+.card-cost-badge {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+  z-index: 15;
+}
+
+.game-card.type-1 .card-cost-badge { background: var(--color-red) !important; }
+.game-card.type-2 .card-cost-badge { background: var(--color-green) !important; }
+.game-card.type-3 .card-cost-badge { background: var(--color-blue) !important; }
+.game-card.type-4 .card-cost-badge { background: var(--color-yellow) !important; color: #000 !important; border-color: #000 !important; }
+.game-card.type-5 .card-cost-badge { background: var(--color-purple) !important; }
+\n/* Orientation warning styles - hidden by default */
 #orientation-warning {
   display: none;
 }

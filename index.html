@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BABEL CODE - 英語ローグライクカードバトル</title>
-  <link rel="stylesheet" href="style.css?v=20260819_02">
+  <link rel="stylesheet" href="style.css?v=20260823_02">
 </head>
 <body>
   <!-- Orientation warning for vertical mobile screens -->
@@ -162,24 +162,42 @@
     <main id="neow-screen" class="screen">
       <div class="neow-container">
         <div class="neow-title">
-          <h2>👾 バベルのシステム起動</h2>
-          <p>塔の攻略開始にあたり、以下のシステム・ボーナスを1つ選択してください。</p>
+          <h2>👾 初期スタイル（デッキ）の選択</h2>
+          <p>攻略開始にあたり、使用する初期スタイルを1つ選択してください。</p>
         </div>
-        <div class="neow-choices">
-          <div class="neow-card safe" onclick="selectNeowBonus('safe')">
-            <span class="neow-icon">🛡️</span>
-            <div class="neow-name">安全ルート (基礎強化)</div>
-            <div class="neow-desc">最大HP +5、およびHPを5回復してスタートする。</div>
+        <div class="neow-choices" style="gap: 15px;">
+          <!-- Style A -->
+          <div class="neow-card safe" onclick="selectStyle('A')" style="width: 32%; cursor: pointer;">
+            <span class="neow-icon">🔥</span>
+            <div class="neow-name">スタイルA：パワー/脳筋型</div>
+            <div class="neow-desc" style="font-size: 0.75rem; text-align: left; line-height: 1.35; margin-top: 8px;">
+              <strong>コンセプト:</strong> 高火力と重い一撃でゴリ押す<br>
+              <strong>キーカード:</strong><br>
+              ・I'm gonna... (次ターン攻+4)<br>
+              ・It takes balls to... (40ダメ/自傷3)
+            </div>
           </div>
-          <div class="neow-card rng" onclick="selectNeowBonus('rng')">
-            <span class="neow-icon">✨</span>
-            <div class="neow-name">お祈りルート (運命変化)</div>
-            <div class="neow-desc">初期デッキの基本カード1枚を、ランダムなコモン以上のカードに変化させる。</div>
+          <!-- Style B -->
+          <div class="neow-card rng" onclick="selectStyle('B')" style="width: 32%; cursor: pointer;">
+            <span class="neow-icon">⚡</span>
+            <div class="neow-name">スタイルB：コンボ型</div>
+            <div class="neow-desc" style="font-size: 0.75rem; text-align: left; line-height: 1.35; margin-top: 8px;">
+              <strong>コンセプト:</strong> コスト0とドローを連打して手数を稼ぐ<br>
+              <strong>キーカード:</strong><br>
+              ・It wouldn't hurt to... (0コス+1ドロー)<br>
+              ・I'm glad... (手札10枚までドロー)
+            </div>
           </div>
-          <div class="neow-card devil" onclick="selectNeowBonus('devil')">
-            <span class="neow-icon">😈</span>
-            <div class="neow-name">悪魔の取引 (高リスク)</div>
-            <div class="neow-desc">最大HPを5失う代わりに、強力な「レアレリック」を1つ得てスタートする。</div>
+          <!-- Style C -->
+          <div class="neow-card devil" onclick="selectStyle('C')" style="width: 32%; cursor: pointer;">
+            <span class="neow-icon">🧪</span>
+            <div class="neow-name">スタイルC：毒＆耐久型</div>
+            <div class="neow-desc" style="font-size: 0.75rem; text-align: left; line-height: 1.35; margin-top: 8px;">
+              <strong>コンセプト:</strong> 敵火力を削ぎ、毒を重ねがけして耐え勝つ<br>
+              <strong>キーカード:</strong><br>
+              ・I keep... (毒4付与、すでに毒なら2倍)<br>
+              ・I'm bad at... (敵攻撃力-3)
+            </div>
           </div>
         </div>
       </div>
@@ -570,6 +588,6 @@
     </div>
   </div>
 
-  <script src="game.js?v=20260819_02"></script>
+  <script src="game.js?v=20260823_02"></script>
 </body>
 </html>

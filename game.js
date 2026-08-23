@@ -238,7 +238,7 @@ const ENEMY_TEMPLATES = {
   slime_1: {
     id: 'slime_1',
     name: '見習いスライム',
-    maxHp: 40,
+    maxHp: 20, // 40 -> 20
     avatar: '🟢',
     desc: 'Bパーツで惑わせてくるスライム。',
     actions: [
@@ -249,7 +249,7 @@ const ENEMY_TEMPLATES = {
   slime_2: {
     id: 'slime_2',
     name: 'タイポ・スライム',
-    maxHp: 50,
+    maxHp: 25, // 50 -> 25
     avatar: '🟢',
     desc: '不適切な文法形態を混ぜて惑わせてくる',
     actions: [
@@ -260,7 +260,7 @@ const ENEMY_TEMPLATES = {
   slime_3: {
     id: 'slime_3',
     name: '巨大スライム',
-    maxHp: 60,
+    maxHp: 30, // 60 -> 30
     avatar: '🟢',
     desc: 'お邪魔カードを送り込んできてデッキを圧迫するスライム。',
     actions: [
@@ -286,7 +286,7 @@ const ENEMY_TEMPLATES = {
   shadow_1: {
     id: 'shadow_1',
     name: '影の使い魔',
-    maxHp: 75,
+    maxHp: 35, // 75 -> 35
     avatar: '🦇',
     desc: '制限時間を少し短縮する。さらにトッピングするたびに筋力+2。',
     toppingReaction: true,
@@ -298,7 +298,7 @@ const ENEMY_TEMPLATES = {
   shadow_2: {
     id: 'shadow_2',
     name: 'さまようシャドー',
-    maxHp: 85,
+    maxHp: 40, // 85 -> 40
     avatar: '👥',
     desc: '毎ターン筋力+3のバフをかける。速攻で倒さないとインフレする。',
     actions: [
@@ -310,7 +310,7 @@ const ENEMY_TEMPLATES = {
   shadow_3: {
     id: 'shadow_3',
     name: '凶悪なシャドー',
-    maxHp: 95,
+    maxHp: 45, // 95 -> 45
     avatar: '👥',
     desc: 'プレイヤーに「混乱（コストランダム化）」を付与してくる。',
     actions: [
@@ -336,7 +336,7 @@ const ENEMY_TEMPLATES = {
   instructor_1: {
     id: 'instructor_1',
     name: '見習い小僧',
-    maxHp: 110,
+    maxHp: 50, // 110 -> 50
     avatar: '👶',
     desc: '1ターンおきに「無形（被ダメージがすべて1）」になる。',
     actions: [
@@ -347,7 +347,7 @@ const ENEMY_TEMPLATES = {
   instructor_2: {
     id: 'instructor_2',
     name: '赤ペン小僧',
-    maxHp: 125,
+    maxHp: 60, // 125 -> 60
     avatar: '👶',
     desc: 'カウントダウン：5ターン目に攻撃力が爆発的に上昇する。',
     actions: [
@@ -359,7 +359,7 @@ const ENEMY_TEMPLATES = {
   instructor_3: {
     id: 'instructor_3',
     name: '筆頭赤ペン小僧',
-    maxHp: 140,
+    maxHp: 65, // 140 -> 65
     avatar: '🧑‍🏫',
     desc: '脆弱デバフ（プレイヤーの被ダメージ1.5倍）を付与。',
     actions: [
@@ -384,7 +384,6 @@ const ENEMY_TEMPLATES = {
   }
 };
 
-// --- Game State Object ---
 let state = {
   screen: 'title', // title, char_select, neow_bonus, map, map_choice, battle, shop, rest, victory, defeat
   player: {
@@ -410,7 +409,9 @@ let state = {
       vulnerable: 0,
       counter: 0,
       confused: 0,     // Confusion status
-      buffProtect: false 
+      buffProtect: false,
+      nextTurnDamageBoost: 0,
+      nextAttackMultiplier: 0
     }
   },
   battle: {
@@ -858,8 +859,8 @@ function openCardPreview(cardId, index) {
   const rubyHtml = card.pronounce ? `<span class="card-pronounce">${card.pronounce}</span>` : '';
   
   cardEl.innerHTML = `
+    <div class="card-cost-badge">${cost}</div>
     <div class="card-footer">
-      <span class="card-cost">${cost}</span>
       <span class="card-type-tag">T${card.type}</span>
     </div>
     ${rubyHtml}
@@ -1336,14 +1337,12 @@ function applyCardEffect(aCard, bChoice) {
   }
   
   if (aCard.id === 'a_gonna') {
-    state.player.tempPower += 4;
-    state.player.statusEffects.nextAttackDiscount = true;
-    logCombat("【I'm gonna...効果】次の攻撃ダメージ+4 ＆ 次の攻撃カードのコスト-1", "system");
+    state.player.statusEffects.nextTurnDamageBoost += 4;
+    logCombat("【I'm gonna...効果】次のターンの攻撃ダメージ +4 を付与！", "system");
   }
   if (aCard.id === 'a_gonna_plus') {
-    state.player.tempPower += 6;
-    state.player.statusEffects.nextAttackDiscount = true;
-    logCombat("【I'm gonna...+効果】次の攻撃ダメージ+6 ＆ コスト軽減", "system");
+    state.player.statusEffects.nextTurnDamageBoost += 6;
+    logCombat("【I'm gonna...+効果】次のターンの攻撃ダメージ +6 を付与！", "system");
   }
   
   if (aCard.id === 'a_should') {
@@ -1390,22 +1389,19 @@ function applyCardEffect(aCard, bChoice) {
   
   if (aCard.id === 'a_rather' || aCard.id === 'a_rather_plus') {
     if (state.player.hand.length > 0) {
-      state.battle.battlePhase = 'card_discard_select';
-      state.battle.discardSelectCount = 1;
-      state.battle.discardCallback = (discardedCardId) => {
-        let dmg = 18;
-        if (aCard.id === 'a_rather_plus' && getCardById(discardedCardId).type === 1) {
-          dmg = 24;
-          logCombat(`【I'd rather...+効果】Type 1の "${getCardById(discardedCardId).title}" を捨てて24ダメージに強化！`, "system");
-        } else {
-          logCombat(`【I'd rather...効果】"${getCardById(discardedCardId).title}" を捨てて18ダメージ！`, "system");
-        }
-        damageEnemy(dmg);
-        
-        const safe = getSafeBattleActionTargets();
-        proceedToPostBSelection(safe.card, safe.verb);
-      };
-      return; 
+      const randomIdx = Math.floor(Math.random() * state.player.hand.length);
+      const discardedCardId = state.player.hand[randomIdx];
+      state.player.hand.splice(randomIdx, 1);
+      state.player.discard.push(discardedCardId);
+      
+      let dmg = 18;
+      if (aCard.id === 'a_rather_plus' && getCardById(discardedCardId).type === 1) {
+        dmg = 24;
+        logCombat(`【I'd rather...+効果】手札からランダムに "${getCardById(discardedCardId).title}" (Type 1) を捨てて24ダメージに強化！`, "system");
+      } else {
+        logCombat(`【I'd rather...効果】手札からランダムに "${getCardById(discardedCardId).title}" を捨てて18ダメージ！`, "system");
+      }
+      damageEnemy(dmg);
     } else {
       damageEnemy(18);
     }
@@ -1623,28 +1619,39 @@ function applyCardEffect(aCard, bChoice) {
   
   // FIX: Hand Discard Select Callback now safely resolves using getSafeBattleActionTargets()
   if (aCard.id === 'a_should_have' || aCard.id === 'a_should_have_plus') {
-    if (state.player.hand.length > 0) {
-      state.battle.battlePhase = 'card_discard_select';
-      state.battle.discardSelectCount = 1;
-      state.battle.discardCallback = () => {
-        if (state.player.discard.length > 0) {
-          const recoveredId = state.player.discard.pop();
-          state.player.hand.push(recoveredId);
-          logCombat(`【I should have...効果】捨て札から直前のカードを1枚回収しました。`, "system");
-        }
-        if (aCard.id === 'a_should_have_plus') {
-          state.player.tempPower += 5;
-        }
-        
-        const safe = getSafeBattleActionTargets();
-        proceedToPostBSelection(safe.card, safe.verb);
-      };
-      return;
+    let recoveredCardId = null;
+    
+    // 1. 優先的に構築中の英文パーツの最後から手札へ回収する（文法の書き直し）
+    if (state.battle.sentenceParts && state.battle.sentenceParts.length > 0) {
+      const poppedPart = state.battle.sentenceParts.pop();
+      recoveredCardId = poppedPart.cardId;
+      state.player.hand.push(recoveredCardId);
+      logCombat(`【I should have...効果】直前に使ったカード "${getCardById(recoveredCardId).title}" を手札に回収しました。`, "system");
+      
+      // 画面上の構築中英文テキストの描画を即座に更新する
+      updateConstructingSentenceDisplay();
+    }
+    // 2. 構築中英文がなければ、従来の捨て札の末尾から回収する
+    else if (state.player.discard.length > 0) {
+      recoveredCardId = state.player.discard.pop();
+      state.player.hand.push(recoveredCardId);
+      logCombat(`【I should have...効果】捨て札から直前に使ったカード "${getCardById(recoveredCardId).title}" を手札に回収しました。`, "system");
     } else {
-      if (state.player.discard.length > 0) {
-        const recoveredId = state.player.discard.pop();
-        state.player.hand.push(recoveredId);
-      }
+      logCombat("【I should have...効果】回収できる使用済みカードが存在しません。", "system");
+    }
+    
+    // 3. 回収後、手札からランダムに1枚捨て札に送る
+    if (state.player.hand.length > 0) {
+      const randomIdx = Math.floor(Math.random() * state.player.hand.length);
+      const discardedCardId = state.player.hand[randomIdx];
+      state.player.hand.splice(randomIdx, 1);
+      state.player.discard.push(discardedCardId);
+      logCombat(`【I should have...効果】手札からランダムに "${getCardById(discardedCardId).title}" を捨てました。`, "system");
+    }
+    
+    if (aCard.id === 'a_should_have_plus') {
+      state.player.tempPower += 5;
+      logCombat("【I should have...+効果】このターンの攻撃力を +5 しました！", "system");
     }
   }
   
@@ -1840,10 +1847,12 @@ function applyCardEffect(aCard, bChoice) {
   }
   
   if (aCard.id === 'a_show_how') {
-    state.player.critMultiplier = 2;
+    state.player.statusEffects.nextAttackMultiplier = 2;
+    logCombat("【I'll show you...効果】次の英文完成攻撃ダメージ 2倍バフ を獲得！", "system");
   }
   if (aCard.id === 'a_show_how_plus') {
-    state.player.critMultiplier = 3;
+    state.player.statusEffects.nextAttackMultiplier = 3;
+    logCombat("【I'll show you...+効果】次の英文完成攻撃ダメージ 3倍バフ を獲得！", "system");
   }
   
   if (aCard.id === 'a_know_what') {
@@ -1941,6 +1950,11 @@ function applyCardEffect(aCard, bChoice) {
       }
       if (state.player.critMultiplier > 1) {
         finalDmg = finalDmg * state.player.critMultiplier;
+      }
+      if (state.player.statusEffects.nextAttackMultiplier > 1) {
+        finalDmg = finalDmg * state.player.statusEffects.nextAttackMultiplier;
+        logCombat(`🔥【次の攻撃倍率発動】ダメージが ${state.player.statusEffects.nextAttackMultiplier} 倍に強化されました！ (最終 ${finalDmg} ダメージ)`, "player");
+        state.player.statusEffects.nextAttackMultiplier = 0; // 消費
       }
       damageEnemy(finalDmg);
     } else if (isShieldCard) {
@@ -2359,6 +2373,11 @@ function executeEnemyTurn() {
   state.player.statusEffects.halfDamage = false;
   
   state.player.tempPower = 0; 
+  if (state.player.statusEffects.nextTurnDamageBoost > 0) {
+    state.player.tempPower += state.player.statusEffects.nextTurnDamageBoost;
+    logCombat(`📈【次ターンバフ適用】攻撃力強化が発動し、今ターンの攻撃力 +${state.player.statusEffects.nextTurnDamageBoost}！`, "player");
+    state.player.statusEffects.nextTurnDamageBoost = 0; // 消費
+  }
   
   state.battle.turn++;
   state.player.energy = state.player.maxEnergy;
@@ -2826,8 +2845,8 @@ function openDeckViewer(mode = 'view') {
     const translationHtml = card.translation ? `<div class="card-translation">${card.translation}</div>` : '';
     const rubyHtml = card.pronounce ? `<span class="card-pronounce">${card.pronounce}</span>` : '';
     cardEl.innerHTML = `
+      <div class="card-cost-badge">${card.cost}</div>
       <div class="card-footer">
-        <span class="card-cost">${card.cost}</span>
         <span class="card-type-tag">T${card.type}</span>
       </div>
       ${rubyHtml}
@@ -2910,8 +2929,8 @@ function switchDictTab(tabIndex) {
     
     const trapBadgeHtml = choice.isTrap ? '<div class="card-mod-badge" style="color:var(--color-red); border-color:var(--color-red);">⚠️ 罠 (Trap)</div>' : '';
     cardEl.innerHTML = `
+      <div class="card-cost-badge" style="border-color: #64748b; color: #94a3b8; background: #1e293b !important;">B</div>
       <div class="card-footer">
-        <span class="card-cost" style="border-color: #64748b; color: #94a3b8;">B</span>
         <span class="card-type-tag">T${tabIndex}</span>
       </div>
       <div class="card-title" style="font-size: 1.15rem; color: #fff;">${choice.text}</div>
@@ -2996,33 +3015,61 @@ function getPotionName(id) {
 }
 
 // --- Neow's System Bonus ---
-function selectNeowBonus(type) {
-  if (type === 'safe') {
-    state.player.maxHp += 5;
-    state.player.hp = state.player.maxHp;
-    showToast("最大HP +5 を獲得しました！", "success");
-  } else if (type === 'rng') {
-    if (state.player.deck.length > 0) {
-      const idx = Math.floor(Math.random() * state.player.deck.length);
-      const oldCard = getCardById(state.player.deck[idx]);
-      const pool = CARD_DATABASE.aCards.filter(c => c.rarity !== 'starter' && c.id !== 'c_waste' && !c.id.endsWith('_plus'));
-      const newCard = pool[Math.floor(Math.random() * pool.length)];
-      state.player.deck[idx] = newCard.id;
-      showToast(`初期カード "${oldCard.title}" が "${newCard.title}" に変化した！`, "success");
-    }
-  } else if (type === 'devil') {
-    state.player.maxHp -= 5;
-    state.player.hp = Math.min(state.player.hp, state.player.maxHp);
-    
-    const relicPool = ['fluorescent_marker', 'desire_bracelet', 'dictionary_piece', 'photo_frame'];
-    const unowned = relicPool.filter(r => !state.player.relics.includes(r));
-    if (unowned.length > 0) {
-      const newRelic = unowned[Math.floor(Math.random() * unowned.length)];
-      state.player.relics.push(newRelic);
-      showToast(`悪魔の取引完了。レリック「${CARD_DATABASE.relics[newRelic].name}」を獲得！`, "success");
-    }
-  }
+function selectStyle(styleId) {
+  state.player.selectedPotionIndex = null;
+  state.player.relics = ['fluorescent_marker'];
+  state.player.potions = ['potion_hp', null];
+  state.player.gold = 100;
   
+  if (styleId === 'A') {
+    state.player.maxHp = 35;
+    state.player.hp = 35;
+    state.player.deck = [
+      'a_wanna', 'a_wanna', 'a_wanna', 
+      'a_need', 'a_need', 
+      'a_lets', 
+      'a_gonna', 
+      'a_takes_balls', 
+      'a_think', 
+      'a_know_who'
+    ];
+    showToast("スタイルA：パワー/脳筋型 で起動！", "success");
+  } else if (styleId === 'B') {
+    state.player.maxHp = 28;
+    state.player.hp = 28;
+    state.player.deck = [
+      'a_wanna', 
+      'a_need', 
+      'a_lets', 
+      'a_hurt_not', 
+      'a_hope', 'a_hope', 
+      'a_glad', 
+      'a_ve_already', 
+      'a_show_how', 
+      'a_think'
+    ];
+    showToast("スタイルB：テクニカル/コンボ型 で起動！", "success");
+  } else if (styleId === 'C') {
+    state.player.maxHp = 30;
+    state.player.hp = 30;
+    state.player.deck = [
+      'a_wanna', 
+      'a_need', 'a_need', 
+      'a_keep', 'a_keep', 
+      'a_bad_at', 
+      'a_enjoy', 
+      'a_sick_of', 
+      'a_think', 
+      'a_know_where'
+    ];
+    showToast("スタイルC：毒＆鉄壁耐久型 で起動！", "success");
+  }
+
+  hasRelicChosen = false;
+  state.map.currentLayer = 1;
+  state.map.nodes.forEach(n => n.visited = false);
+  
+  shuffleDeck(state.player.deck);
   state.screen = 'map';
   render();
 }
@@ -3516,6 +3563,12 @@ function renderBattle() {
     if (state.player.sentencePower > 0) {
       playerStatus.innerHTML += `<div class="status-effect" title="完成バフ(筋力)" style="border-color:#00e676; color:#00e676; cursor:help;">📖 完成バフ:+${state.player.sentencePower}</div>`;
     }
+    if (state.player.statusEffects.nextTurnDamageBoost > 0) {
+      playerStatus.innerHTML += `<div class="status-effect" title="次ターン攻撃強化" style="border-color:#f87171; color:#f87171; cursor:help;">⏰ 次ターン:+${state.player.statusEffects.nextTurnDamageBoost}</div>`;
+    }
+    if (state.player.statusEffects.nextAttackMultiplier > 1) {
+      playerStatus.innerHTML += `<div class="status-effect" title="次攻撃倍率" style="border-color:#f59e0b; color:#f59e0b; cursor:help;">🔥 次攻撃:${state.player.statusEffects.nextAttackMultiplier}倍</div>`;
+    }
   }
   
   const energyOrb = document.getElementById('battle-energy-orb');
@@ -3646,8 +3699,8 @@ function renderPlayerHand() {
     const translationHtml = card.translation ? `<div class="card-translation">${card.translation}</div>` : '';
     const rubyHtml = card.pronounce ? `<span class="card-pronounce">${card.pronounce}</span>` : '';
     cardEl.innerHTML = `
+      <div class="card-cost-badge">${cost}</div>
       <div class="card-footer">
-        <span class="card-cost">${cost}</span>
         <span class="card-type-tag">T${card.type}</span>
       </div>
       ${rubyHtml}
@@ -3751,7 +3804,7 @@ function renderVictoryDraftUI() {
       const nextHintText = getRequiredNextTypeLabel(card.type);
       const rubyHtml = card.pronounce ? `<span class="card-pronounce" style="font-size:0.6rem; text-align:left; color:rgba(255,255,255,0.4);">${card.pronounce}</span>` : '';
       btn.innerHTML = `
-        <span style="font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.8rem;">Type ${card.type} | ${card.translation}</span>
+        <span style="font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.8rem;">Type ${card.type} | コスト: ${card.cost} | ${card.translation}</span>
         ${rubyHtml}
         <span class="choice-text" style="font-size: 1.15rem; margin-top:5px;">${card.title}</span>
         ${modBadgeHtml}
@@ -3788,7 +3841,7 @@ function renderShop() {
       const nextHintText = getRequiredNextTypeLabel(item.type);
       const rubyHtml = item.pronounce ? `<div class="card-pronounce" style="font-size:0.6rem; color:rgba(255,255,255,0.4); text-align:center; margin-top:2px;">${item.pronounce}</div>` : '';
       div.innerHTML = `
-        <div style="font-size: 0.72rem; color:var(--text-secondary);">T${item.type} | ${item.translation}</div>
+        <div style="font-size: 0.72rem; color:var(--text-secondary);">T${item.type} | コスト: ${item.cost} | ${item.translation}</div>
         ${rubyHtml}
         <div style="font-weight:bold; font-size:0.95rem; text-align:center; height:36px; display:flex; align-items:center; justify-content:center;">${item.title}</div>
         ${modBadgeHtml}
@@ -3884,7 +3937,7 @@ function renderShop() {
 
 // --- Global Scope bindings to window for HTML event handlers ---
 window.selectCharacter = selectCharacter;
-window.selectNeowBonus = selectNeowBonus;
+window.selectStyle = selectStyle;
 window.usePotion = usePotion;
 window.openDeckViewer = openDeckViewer;
 window.closeDeckViewer = closeDeckViewer;
